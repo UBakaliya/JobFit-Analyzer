@@ -6,19 +6,22 @@ const {
   getProfile,
   deleteProfile,
   resetPassword,
+  logged,
 } = require("../controller/authController");
-const validateToken = require("../middleware/verifyToken");
+const { validateToken } = require("../middleware/verifyToken");
 
 router.post("/login", login);
 
 router.post("/register", register);
 
-router.get("/logout", validateToken, logout);
+router.get("/logged", validateToken, logged);
 
-router.get("/profile/:id", validateToken, getProfile);
+router.post("/logout", validateToken, logout);
 
-router.delete("/profile/delete/:id", validateToken, deleteProfile);
+router.get("/profile", validateToken, getProfile);
 
-router.put("/profile/resetpassword/:id", validateToken, resetPassword);
+router.delete("/profile/delete/", validateToken, deleteProfile);
+
+router.put("/profile/resetpassword/", validateToken, resetPassword);
 
 module.exports = router;

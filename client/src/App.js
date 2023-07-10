@@ -1,31 +1,45 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PrivateRoute from "./utils/PrivateRoute";
 import NavbarCompo from "./components/NavbarCompo";
 import Home from "./components/Home";
 import About from "./components/About";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Account from "./components/Account";
-import Logout from "./components/Logout";
-import Result from "./components/Result";
+import axios from "axios";
+import ProtectedRoutes from "./utils/ProtectedRoutes";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  useEffect(() => {
+    const checkIsLoggedIn = async () => {
+      try {
+        const res = await axios.get("http://localhost:9999/api/v1/logged", {
+          withCredentials: true,
+        });
+        setIsLoggedIn(res.data.auth);
+      } catch (error) {
+        console.log(error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkIsLoggedIn();
+  }, []);
 
   return (
     <Router>
-      <NavbarCompo isLogin={isAuthenticated}>
+      <NavbarCompo isLogged={isLoggedIn}>
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          <Route exact path="/" element={<Home isLoggedIn={isLoggedIn} />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
+          {/* Protected Routes (account) */}
+          <Route element={<ProtectedRoutes checkIsLoggedIn={isLoggedIn} />}>
             <Route path="/account" element={<Account />} />
-            <Route path="/logout" element={<Logout />} />
           </Route>
-          {/* <Route path="/result" element={<Result />} /> */}
         </Routes>
       </NavbarCompo>
     </Router>

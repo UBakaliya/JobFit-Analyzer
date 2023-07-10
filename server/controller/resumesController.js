@@ -2,7 +2,8 @@ const User = require("../model/userSchema");
 const Resume = require("../model/resumeSchema");
 const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
-const scanHelper = require("../helper/scanHelper");
+const scanHelper = require("../utils/scanHelper");
+const saveResume = require("../utils/saveDoc");
 
 // @desc    Scan resume and compare it with the give job description
 // @route   POST /api/v1/resumes/scan
@@ -17,58 +18,39 @@ const scan = (req, res) => {
     const resumeFile = req.files.resumeFile;
 
     // accept the file if it is .docx
-    if (resumeFile.name.toLowerCase().includes(typeOfFileToAccept[0])) {
+    if (resumeFile.name.includes(typeOfFileToAccept[0])) {
       // scan the .docx
       mammoth
         .extractRawText({ buffer: resumeFile.data })
         .then((result) => {
           const textContent = result.value;
+          // get the match rate
           const matchRate = scanHelper(textContent, req.body.jobDescription);
+          // save the user resume
+          saveResume(textContent, req);
 
-          return res.status(200).json({ matchRate });
+          res.status(200).json({ matchRate });
         })
         .catch((error) => {
-          return res.status(400).json({ message: error });
+          res.status(400).json({ message: error });
         });
     }
     // accept the file if it is .pdf
-    if (resumeFile.name.toLowerCase().includes(typeOfFileToAccept[1])) {
+    if (resumeFile.name.includes(typeOfFileToAccept[1])) {
       pdfParse(resumeFile).then((result) => {
         // scan the pdf
         const matchRate = scanHelper(result.text, req.body.jobDescription);
+        // save the user resume
+        saveResume(result.text, req);
 
-        return res.status(200).json({ matchRate });
+        res.status(200).json({ matchRate });
       });
     }
   } catch (error) {
-    return res
-      .status(400)
-      .json({ message: "Not a valid type of file", error: error.message });
-  }
-};
-
-// @desc    Save resume
-// @route   POST /api/v1/resumes/upload/:userId
-// @access  Private
-const postResume = async (req, res) => {
-  const { filename, data, contentType, size } = req.body;
-
-  try {
-    const newResume = await new Resume({ filename, data, contentType, size });
-
-    const addResume = await User.findByIdAndUpdate(
-      { _id: req.params.userId },
-      { $push: { resumes: newResume } },
-      { new: true }
-    );
-
-    if (addResume) {
-      res.json({ message: "Resume added" });
-    } else {
-      res.json({ message: "Can't add Resume " });
-    }
-  } catch (error) {
-    res.json({ error: error.message });
+    res.status(400).json({
+      message: "Please provide following types of documents: PDF, DOCX",
+      error: error.message,
+    });
   }
 };
 
@@ -145,7 +127,6 @@ const deleteResume = async (req, res) => {
 
 module.exports = {
   getResume,
-  postResume,
   getResumes,
   deleteResumes,
   deleteResume,

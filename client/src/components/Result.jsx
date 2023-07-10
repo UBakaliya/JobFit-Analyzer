@@ -26,7 +26,7 @@ const Result = ({ onGoBack, matchRate }) => {
         <Col xs={12} sm={6} className="offset-sm-3">
           <div className="bg-light p-5 rounded shadow">
             <h4 className="font-weight-bold mb-4">Result</h4>
-            <h5 className={`text-center ${getColorClass()}`}>{matchRate} %</h5>
+            <h4 className={`text-center ${getColorClass()}`}>{matchRate} %</h4>
           </div>
         </Col>
       </Row>

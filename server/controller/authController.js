@@ -1,43 +1,61 @@
 const User = require("../model/userSchema");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { generateJWTAccessToken } = require("../middleware/verifyToken");
+require("dotenv").config();
 
 // @desc    Auth login user
 // @route   POST /api/v1/login
 // @access  Public
 const login = async (req, res) => {
-  const { username, email, password } = req.body;
-
   try {
+    const { email, password } = req.body;
     // get one of them: email / username
     const user =
-      (await User.findOne({ username })) || (await User.findOne({ email }));
+      (await User.findOne({ username: email })) ||
+      (await User.findOne({ email }));
 
     if (!user) {
-      return res.json({ error: "Username / Password is invalid" });
+      return res
+        .status(401)
+        .json({ message: "username/email or password is invalid" });
     }
-
+    const comparePass = await bcrypt.compare(password, user.password);
     // validate the password
-    if (await bcrypt.compare(password, user.password)) {
+    if (comparePass) {
+      // generate jwt token
+      const token = generateJWTAccessToken(user);
+
       // store the token in the cookies
-      jwt.sign(
-        { user },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: "12h" },
-        (err, token) => {
-          if (err) throw err;
-          res.cookie("jwt_token", token, {
-            maxAge: 12 * 60 * 60 * 1000,
-            httpOnly: true,
-          });
-          res.json({ _id: user._id })
-        }
-      );
+      res.cookie("RESUME_SCANNER_AUTH_TOKEN", token, {
+        httpOnly: true,
+        maxAge: 12 * 60 * 60 * 1000,
+      });
+      
+      req.user = user;
+      res.json({ message: "You are logged in successfully!" });
     } else {
-      return res.json({ error: "Username / Password is invalid" });
+      return res
+        .status(401)
+        .json({ message: "username/email or password is invalid" });
     }
   } catch (error) {
-    throw new Error(error.message);
+    res.status(401).json({ message: error.message });
+  }
+};
+
+// @desc    Check if the user if logged in
+// @route   POST /api/v1/logged
+// @access  Private
+const logged = (req, res) => {
+  const cookie = req.headers.cookie;
+  if (cookie) {
+    const token = cookie.split("=")[1];
+    const match = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    if (!match) {
+      return res.status(403).json({ auth: false, message: "Not Logged in" });
+    }
+    return res.status(200).json({ auth: true, message: "Login" });
   }
 };
 
@@ -57,12 +75,12 @@ const register = async (req, res) => {
 
     (await newUser.save())
       ? res.json({ _id: newUser._id })
-      : res.statusCode(500).json({ error: "can't add user to db" });
+      : res.statusCode(500).json({ message: "can't add user to db" });
   } catch (error) {
     // user already excised
     error.code === 11000
-      ? res.json({ error: "Username already excised" })
-      : res.json({ error });
+      ? res.status(401).json({ message: "Username already excised" })
+      : res.json({ message: error.message });
   }
 };
 
@@ -70,19 +88,20 @@ const register = async (req, res) => {
 // @route   GET /api/v1/logout
 // @access  Private
 const logout = (req, res) => {
-  res.clearCookie("jwt_token");
-  res.json({ response: "Logging out..." });
+  res.status(200).clearCookie("jwt_token");
+  res.status(200).json({ message: "Logging out..." });
 };
 
 // @desc    Auth get user account information
 // @route   GET /api/v1/profile
 // @access  Private
-const getProfile = async (req, res) => {
+const getProfile = (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    res.send({ username: user.username, email: user.email });
+    const user = req.user;
+    // send the data
+    res.status(200).json({ email: user.email, username: user.username });
   } catch (error) {
-    res.json({ error: "Can't find the user" });
+    res.status(301).json({ message: "Can't find the user" });
   }
 };
 
@@ -91,15 +110,18 @@ const getProfile = async (req, res) => {
 // @access  Private
 const deleteProfile = async (req, res) => {
   try {
-    const deleteUser = await User.deleteOne({ _id: req.params.id });
+    const _id = req.user._id;
+    const deleteUser = await User.deleteOne({ _id });
     if (deleteUser) {
-      res.clearCookie("jwt_token");
-      res.json({ message: "Deleted a user" });
+      res
+        .status(200)
+        .clearCookie("jwt_token")
+        .json({ message: "Deleted a user" });
     } else {
-      res.json({ error: "Can't delete user" });
+      res.json({ message: "Can't delete user" });
     }
   } catch (error) {
-    res.json(error);
+    res.json({ message: error });
   }
 };
 
@@ -108,16 +130,33 @@ const deleteProfile = async (req, res) => {
 // @access  Private
 const resetPassword = async (req, res) => {
   try {
-    const updatePass = await User.updateOne(
-      { _id: req.params.id },
-      { password: await bcrypt.hash(req.body.newPassword, 10) }
-    );
-    if (updatePass) {
-      res.clearCookie("jwt_token");
-      res.json({ message: "Password updated" });
-    } else res.json({ error: "Can't update user password" });
+    const _id = req.user._id;
+    const user = await User.findById(_id);
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid user Id" });
+    }
+
+    const { newPassword, oldPassword } = req.body;
+    const comparePass = await bcrypt.compare(oldPassword, user.password);
+
+    if (comparePass) {
+      const updatePass = await User.updateOne(
+        { _id },
+        { password: await bcrypt.hash(newPassword, 10) }
+      );
+      if (updatePass) {
+        return res.status(200).json({ message: "Password updated" });
+      } else {
+        return res.status(401).json({ message: "Can't update password" });
+      }
+    } else {
+      return res
+        .status(401)
+        .json({ message: "Invalid Password, please enter a valid password" });
+    }
   } catch (error) {
-    res.json(error.message);
+    res.status(401).json({ message: error.message });
   }
 };
 
@@ -128,4 +167,5 @@ module.exports = {
   getProfile,
   deleteProfile,
   resetPassword,
+  logged,
 };
