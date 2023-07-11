@@ -12,7 +12,7 @@ This project is built using the MERN stack (MongoDB, Express.js, React.js, Node.
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-username/JobFit-Analyzer.git`
+1. Clone the repository: `git clone https://github.com/UBakaliya/JobFit-Analyzer.git`
 2. Install the required dependencies for the backend:
    ```
    cd server
