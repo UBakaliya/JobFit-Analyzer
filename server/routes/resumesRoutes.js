@@ -10,9 +10,7 @@ const {
 
 router.get("/:userId/:id", validateToken, getResume);
 
-router.get("/:userId", validateToken, getResumes);
-
-// router.post("/upload", validateToken, postResume);
+router.get("/", validateToken, getResumes);
 
 router.post("/scan", scan);
 

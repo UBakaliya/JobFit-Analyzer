@@ -1,40 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 import "../index.css";
-
-const truncateQuery = (query, maxLength) => {
-  if (query.length <= maxLength) {
-    return query;
-  } else {
-    return query.substring(0, maxLength - 3) + "...";
-  }
-};
+import axios from "axios";
 
 const History = ({ loadedFile }) => {
-  const [history, setHistory] = useState([
-    { query: "Search query 1" },
-    { query: "Search query 2" },
-    { query: "Search query 3" },
-    { query: "Search query 4" },
-    { query: "Search query 5" },
-    { query: "Search query 6" },
-    { query: "Search query 7" },
-    { query: "Search query 8" },
-    { query: "Search query 9" },
-    { query: "Search query 10" },
-  ]);
+  const [history, setHistory] = useState([]);
 
+  const truncateQuery = (query, maxLength) => {
+    if (query.length <= maxLength) {
+      return query;
+    } else {
+      return query.substring(0, maxLength - 3) + "...";
+    }
+  };
 
+  useEffect(() => {
+    const getResumes = async () => {
+      try {
+        const res = await axios.get("http://localhost:9999/api/v1/resumes", {
+          withCredentials: true,
+        });
+        setHistory(...history, res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getResumes();
+  }, []);
 
-  
-
-
-  const handleDelete = (index) => {
-    const updatedHistory = [...history];
-    updatedHistory.splice(index, 1);
-    setHistory(updatedHistory);
-    console.log("Item Deleted: ", index);
+  const handleDelete = (_id) => {
+    console.log("delete ", _id);
+    // const updatedHistory = [...history];
+    // updatedHistory.splice(index, 1);
+    // setHistory(updatedHistory);
+    // console.log("Item Deleted: ", index);
   };
 
   const handleLoad = (item) => {
@@ -43,6 +43,7 @@ const History = ({ loadedFile }) => {
   };
 
   const handleClearAll = () => {
+    // delete all
     setHistory([]);
   };
 
@@ -67,9 +68,9 @@ const History = ({ loadedFile }) => {
           ) : (
             <div className="history-scroll">
               <ul className="list-group">
-                {history.map((item, index) => (
+                {history.map(({ fileName, _id }) => (
                   <li
-                    key={index}
+                    key={_id}
                     className="list-group-item d-flex justify-content-between align-items-center w-100"
                   >
                     <div className="item-container">
@@ -77,24 +78,24 @@ const History = ({ loadedFile }) => {
                         className="query-link"
                         style={{ marginRight: "10px" }}
                       >
-                        {truncateQuery(item.query, 50)}
+                        {truncateQuery(fileName, 50)}
                       </span>
                     </div>
                     <div>
-                      <Button
+                      {/* <Button
                         variant="primary"
                         className="load-button pr-5"
                         style={{ marginRight: "10px" }}
                         onClick={() => {
-                          handleLoad(index);
-                          loadedFile(item.query);
+                          handleLoad(_id);
+                          loadedFile(fileName);
                         }}
                       >
                         <FaCloudUploadAlt className="upload-icon" /> Load
-                      </Button>
+                      </Button> */}
                       <Button
                         variant="outline-danger"
-                        onClick={() => handleDelete(index)}
+                        onClick={() => handleDelete(_id)}
                       >
                         <FaTimes />
                       </Button>

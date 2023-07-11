@@ -2,13 +2,10 @@ const mongoose = require("mongoose");
 
 const ResumeSchema = mongoose.Schema(
   {
-    filename: { type: String, required: true },
-    data: Buffer,
-    contentType: String,
-    size: Number,
-    metadata: {
-      type: mongoose.Schema.Types.Mixed,
-    },
+    fileName: { type: String, required: true },
+    data: { type: Buffer, required: true },
+    contentType: { type: String, required: true },
+    size: { type: String, required: true },
   },
   { timestamps: true }
 );

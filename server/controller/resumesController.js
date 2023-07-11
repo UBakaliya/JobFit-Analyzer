@@ -17,6 +17,9 @@ const scan = (req, res) => {
     const typeOfFileToAccept = [".docx", ".pdf"];
     const resumeFile = req.files.resumeFile;
 
+    // save the user resume if the user is logged in
+    saveResume(req);
+
     // accept the file if it is .docx
     if (resumeFile.name.includes(typeOfFileToAccept[0])) {
       // scan the .docx
@@ -24,10 +27,9 @@ const scan = (req, res) => {
         .extractRawText({ buffer: resumeFile.data })
         .then((result) => {
           const textContent = result.value;
+
           // get the match rate
           const matchRate = scanHelper(textContent, req.body.jobDescription);
-          // save the user resume
-          saveResume(textContent, req);
 
           res.status(200).json({ matchRate });
         })
@@ -40,8 +42,6 @@ const scan = (req, res) => {
       pdfParse(resumeFile).then((result) => {
         // scan the pdf
         const matchRate = scanHelper(result.text, req.body.jobDescription);
-        // save the user resume
-        saveResume(result.text, req);
 
         res.status(200).json({ matchRate });
       });
@@ -79,7 +79,7 @@ const getResume = async (req, res) => {
 // @access  Private
 const getResumes = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.user._id);
     if (!user) return res.json({ message: "Can't find user" });
     res.json(user.resumes);
   } catch (error) {
