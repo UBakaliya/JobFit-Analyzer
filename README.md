@@ -1,6 +1,5 @@
 Certainly! Here's an updated version of the README.md file to reflect the MERN stack and the client-server architecture:
 
-```
 # JobFit Analyzer
 
 JobFit Analyzer is an intelligent application that helps job seekers assess their compatibility with job opportunities. By analyzing the user's resume and comparing it to a job description, JobFit Analyzer provides a comprehensive matching analysis, presenting a percentage indicating the degree of fit.
