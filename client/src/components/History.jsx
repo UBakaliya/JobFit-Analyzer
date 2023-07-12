@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
-import { Button } from "react-bootstrap";
+import { Button, ListGroup } from "react-bootstrap";
 import "../index.css";
 import axios from "axios";
 
@@ -18,10 +18,11 @@ const History = ({ loadedFile }) => {
   useEffect(() => {
     const getResumes = async () => {
       try {
-        const res = await axios.get("http://localhost:9999/api/v1/resumes", {
+        const res = await axios.get("http://localhost:9999/api/v1/resumes/", {
           withCredentials: true,
         });
-        setHistory(...history, res.data);
+
+        setHistory([...history, ...res.data.resumes]);
       } catch (error) {
         console.log(error);
       }
@@ -29,12 +30,19 @@ const History = ({ loadedFile }) => {
     getResumes();
   }, []);
 
-  const handleDelete = (_id) => {
+  const handleDelete = async (_id) => {
     console.log("delete ", _id);
-    // const updatedHistory = [...history];
-    // updatedHistory.splice(index, 1);
-    // setHistory(updatedHistory);
-    // console.log("Item Deleted: ", index);
+
+    try {
+      const res = await axios.delete(
+        `http://localhost:9999/api/v1/resumes/${_id}`,
+        { withCredentials: true }
+      );
+      console.log(res.data);
+      setHistory(history.filter((obj) => obj._id !== _id));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleLoad = (item) => {
@@ -42,15 +50,34 @@ const History = ({ loadedFile }) => {
     console.log("Loading item:", item);
   };
 
-  const handleClearAll = () => {
-    // delete all
-    setHistory([]);
+  const handleClearAll = async () => {
+    try {
+      // delete all
+      const res = await axios.delete("http://localhost:9999/api/v1/resumes/", {
+        withCredentials: true,
+      });
+      console.log(res.data.message);
+      setHistory([]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getFormattedDate = (date) => {
+    const formateDate = new Date(date);
+
+    const month = formateDate.toLocaleString("en-US", { month: "long" });
+    const day = formateDate.toLocaleString("en-US", { day: "numeric" });
+    const year = formateDate.toLocaleString("en-US", { year: "numeric" });
+    const time = formateDate.toLocaleString("en-US", { timeStyle: "medium" });
+
+    return <span className="formatted-date">{time}</span>;
   };
 
   return (
     <div className="history-container mt-5">
       <div className="history-box">
-        <div className="history-header mb-3">
+        <div className="history-header d-flex justify-content-between align-items-center mb-3">
           <h3 className="history-title">History</h3>
           {history.length !== 0 && (
             <Button
@@ -64,22 +91,18 @@ const History = ({ loadedFile }) => {
         </div>
         <div className="history-items">
           {history.length === 0 ? (
-            <p>No history available</p>
+            <p className="text-center">No history available</p>
           ) : (
             <div className="history-scroll">
-              <ul className="list-group">
-                {history.map(({ fileName, _id }) => (
-                  <li
+              <ListGroup>
+                {history.map(({ fileName, _id, createdAt }) => (
+                  <ListGroup.Item
                     key={_id}
-                    className="list-group-item d-flex justify-content-between align-items-center w-100"
+                    className="d-flex justify-content-between align-items-center"
                   >
                     <div className="item-container">
-                      <span
-                        className="query-link"
-                        style={{ marginRight: "10px" }}
-                      >
-                        {truncateQuery(fileName, 50)}
-                      </span>
+                      {getFormattedDate(createdAt)} -{" "}
+                      {truncateQuery(fileName, 50)}
                     </div>
                     <div>
                       {/* <Button
@@ -100,9 +123,9 @@ const History = ({ loadedFile }) => {
                         <FaTimes />
                       </Button>
                     </div>
-                  </li>
+                  </ListGroup.Item>
                 ))}
-              </ul>
+              </ListGroup>
             </div>
           )}
         </div>

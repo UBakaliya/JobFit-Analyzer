@@ -3,11 +3,12 @@ const mongoose = require("mongoose");
 const ResumeSchema = mongoose.Schema(
   {
     fileName: { type: String, required: true },
-    data: { type: Buffer, required: true },
     contentType: { type: String, required: true },
     size: { type: String, required: true },
-  },
-  { timestamps: true }
+    createdAt: { type: Date, default: Date.now },
+  }
+
+  // { timestamps: true }
 );
 const Resume = mongoose.model("Resume", ResumeSchema);
 

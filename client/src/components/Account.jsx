@@ -21,7 +21,7 @@ const Account = () => {
       const response = await axios.get("http://localhost:9999/api/v1/profile", {
         withCredentials: true,
       });
-      console.log(response);
+      console.log(response.data);
       setUser({
         ...user,
         name: response.data.username,
@@ -78,7 +78,7 @@ const Account = () => {
         setSuccess(res.data.message);
         setError("");
         setShowConfirmation(false);
-        window.location.href = "/";
+        window.location.reload();
       })
       .catch((err) => {
         setError("Can't delete user" + err.response.data.message);
@@ -110,19 +110,21 @@ const Account = () => {
               <Form.Control type="email" value={user.email} disabled />
             </Form.Group>
 
-            <Form.Group controlId="formPassword">
+            <Form.Group controlId="formOldPassword">
               <Form.Label className="mt-2">Old Password</Form.Label>
               <Form.Control
+                autoComplete="on"
                 type="password"
                 value={oldPassword}
                 placeholder="Old Password"
-                required
                 onChange={handleOldPasswordChange}
+                required
               />
             </Form.Group>
-            <Form.Group controlId="formPassword">
+            <Form.Group controlId="formNewPassword">
               <Form.Label className="mt-2">New Password</Form.Label>
               <Form.Control
+                autoComplete="on"
                 type="password"
                 value={newPassword}
                 placeholder="New Password"

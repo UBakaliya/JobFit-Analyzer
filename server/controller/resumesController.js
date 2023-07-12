@@ -80,8 +80,12 @@ const getResume = async (req, res) => {
 const getResumes = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
+
+    const sortedResumes = user.resumes.sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    });
     if (!user) return res.json({ message: "Can't find user" });
-    res.json(user.resumes);
+    res.json({ resumes: sortedResumes });
   } catch (error) {
     res.json({ error: error.message });
   }
@@ -93,7 +97,7 @@ const getResumes = async (req, res) => {
 const deleteResumes = async (req, res) => {
   try {
     const deleteAll = await User.findByIdAndUpdate(
-      { _id: req.params.userId },
+      { _id: req.user._id },
       { $unset: { resumes: 1 } },
       { new: true }
     );
@@ -111,7 +115,7 @@ const deleteResumes = async (req, res) => {
 // @access  Private
 const deleteResume = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.user._id);
     if (!user) return res.json({ message: "Can't find user" });
 
     const filterResume = user.resumes.filter(
@@ -119,7 +123,10 @@ const deleteResume = async (req, res) => {
     );
 
     user.resumes = filterResume;
-    if (await user.save()) res.json({ resumes: filterResume });
+    const updateResumeArr = await user.save();
+    if (updateResumeArr) {
+      res.status(200).json({ message: `Resume ${req.params.id} is deleted` });
+    }
   } catch (error) {
     res.json({ error: error.message });
   }

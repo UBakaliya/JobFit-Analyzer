@@ -27,11 +27,11 @@ const login = async (req, res) => {
       const token = generateJWTAccessToken(user);
 
       // store the token in the cookies
-      res.cookie("RESUME_SCANNER_AUTH_TOKEN", token, {
+      res.cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
         httpOnly: true,
         maxAge: 12 * 60 * 60 * 1000,
       });
-      
+
       req.user = user;
       res.json({ message: "You are logged in successfully!" });
     } else {
@@ -77,9 +77,12 @@ const register = async (req, res) => {
       ? res.json({ _id: newUser._id })
       : res.statusCode(500).json({ message: "can't add user to db" });
   } catch (error) {
-    // user already excised
+    // user already exists
     error.code === 11000
-      ? res.status(401).json({ message: "Username already excised" })
+      ? res.status(401).json({
+          message:
+            "This username or email is already in use. Please choose a different one.",
+        })
       : res.json({ message: error.message });
   }
 };
@@ -88,8 +91,10 @@ const register = async (req, res) => {
 // @route   GET /api/v1/logout
 // @access  Private
 const logout = (req, res) => {
-  res.status(200).clearCookie("jwt_token");
-  res.status(200).json({ message: "Logging out..." });
+  res
+    .status(200)
+    .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
+    .json({ message: "Logging out..." });
 };
 
 // @desc    Auth get user account information
@@ -115,7 +120,7 @@ const deleteProfile = async (req, res) => {
     if (deleteUser) {
       res
         .status(200)
-        .clearCookie("jwt_token")
+        .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
         .json({ message: "Deleted a user" });
     } else {
       res.json({ message: "Can't delete user" });

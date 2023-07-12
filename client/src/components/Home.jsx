@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { MDBFile, MDBTextArea } from "mdb-react-ui-kit";
 import Result from "./Result";
@@ -11,7 +11,6 @@ const Home = ({ isLoggedIn }) => {
   const [showResult, setShowResult] = useState(false);
   const [matchRate, setMatchRate] = useState("");
   const [error, setError] = useState(null);
-  const [typeOfFile, setTypeOfFile] = useState("");
 
   const convertToMB = () => {
     const bytes = resumeFile.size;
@@ -21,19 +20,12 @@ const Home = ({ isLoggedIn }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const fileName = resumeFile.name.toLowerCase();
     const typeOfFileToAccept = [".docx", ".pdf"];
-
-    if (
-      !fileName.endsWith(typeOfFileToAccept[0]) &&
-      !fileName.endsWith(typeOfFileToAccept[1])
-    ) {
-      return setError("Invalid file type Accepted formats: PDF, DOCX");
-    }
-    if (fileName.endsWith(typeOfFileToAccept[0])) setTypeOfFile(".docx");
-
-    if (fileName.endsWith(typeOfFileToAccept[1])) setTypeOfFile(".pdf");
+    let typeOfFile = "";
+    if (fileName.endsWith(typeOfFileToAccept[0])) typeOfFile = ".docx";
+    else if (fileName.endsWith(typeOfFileToAccept[1])) typeOfFile = ".pdf";
+    else return setError("Invalid file type Accepted formats: PDF, DOCX");
 
     // get the file size in MB
     const fileSize = convertToMB();

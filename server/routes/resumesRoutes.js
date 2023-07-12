@@ -14,8 +14,8 @@ router.get("/", validateToken, getResumes);
 
 router.post("/scan", scan);
 
-router.delete("/:userId", validateToken, deleteResumes);
+router.delete("/", validateToken, deleteResumes);
 
-router.delete("/:userId/:id", validateToken, deleteResume);
+router.delete("/:id", validateToken, deleteResume);
 
 module.exports = router;
