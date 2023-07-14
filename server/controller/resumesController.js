@@ -1,5 +1,4 @@
 const User = require("../model/userSchema");
-const Resume = require("../model/resumeSchema");
 const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
 const scanHelper = require("../utils/scanHelper");
@@ -42,7 +41,6 @@ const scan = (req, res) => {
       pdfParse(resumeFile).then((result) => {
         // scan the pdf
         const matchRate = scanHelper(result.text, req.body.jobDescription);
-
         res.status(200).json({ matchRate });
       });
     }
@@ -59,9 +57,9 @@ const scan = (req, res) => {
 // @access  Private
 const getResume = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.user._id);
     if (!user) return res.json({ message: "Can't find user" });
-
+    
     const resume = user.resumes.find(
       (item) => item._id.toString() === req.params.id
     );

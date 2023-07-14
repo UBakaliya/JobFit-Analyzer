@@ -4,7 +4,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 const Result = ({ onGoBack, matchRate }) => {
-  const [showForm, setShowForm] = useState(false);
+  const [, setShowForm] = useState(false);
 
   const handleGoBack = () => {
     setShowForm(true);
@@ -12,14 +12,15 @@ const Result = ({ onGoBack, matchRate }) => {
   };
 
   const getColorClass = () => {
-    if (matchRate >= 90) {
-      return "text-success"; // Green color for match rate above 90%
-    } else if (matchRate >= 50) {
-      return "text-warning"; // Yellow color for match rate above 70%
+    if (matchRate >= 50) {
+      return "text-success";
+    } else if (matchRate >= 30) {
+      return "text-warning";
     } else {
-      return "text-danger"; // Red color for match rate below or equal to 70%
+      return "text-danger";
     }
   };
+
   return (
     <Container>
       <Row className="mt-5">
@@ -32,7 +33,7 @@ const Result = ({ onGoBack, matchRate }) => {
       </Row>
       <Row className="mt-3">
         <Col className="text-center">
-          <Button variant="secondary" onClick={handleGoBack}>
+          <Button variant="dark" onClick={handleGoBack}>
             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
             Go Back
           </Button>

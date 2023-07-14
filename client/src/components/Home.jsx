@@ -2,10 +2,9 @@ import { useState } from "react";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { MDBFile, MDBTextArea } from "mdb-react-ui-kit";
 import Result from "./Result";
-import History from "./History";
 import axios from "axios";
 
-const Home = ({ isLoggedIn }) => {
+const Home = () => {
   const [resumeFile, setResumeFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [showResult, setShowResult] = useState(false);
@@ -15,27 +14,27 @@ const Home = ({ isLoggedIn }) => {
   const convertToMB = () => {
     const bytes = resumeFile.size;
     const megabytes = bytes / (1024 * 1024);
-    return megabytes.toFixed(3); // Round the result to 3 decimal places
+    return megabytes.toFixed(3);
   };
-
-  const handleSubmit = (event) => {
+  
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
     const fileName = resumeFile.name.toLowerCase();
-    const typeOfFileToAccept = [".docx", ".pdf"];
+    const typeOfFileToAccept = [".docx", ".pdf"]; 
     let typeOfFile = "";
+
+    // validate file types
     if (fileName.endsWith(typeOfFileToAccept[0])) typeOfFile = ".docx";
     else if (fileName.endsWith(typeOfFileToAccept[1])) typeOfFile = ".pdf";
-    else return setError("Invalid file type Accepted formats: PDF, DOCX");
+    else return setError("Invalid file type. Accepted formats: PDF, DOCX");
 
-    // get the file size in MB
+    // convert this file to mb
     const fileSize = convertToMB();
 
-    // if the file size is more then 10MD then
-    if (fileSize > 10) {
-      return setError("File size must be less then 10MB");
-    }
+    // Do not accept the files thar are more then 10MB
+    if (fileSize > 10) return setError("File size must be less than 10MB");
 
-    // if a valid file
     setError("");
 
     let formData = new FormData();
@@ -44,19 +43,18 @@ const Home = ({ isLoggedIn }) => {
     formData.append("fileSize", fileSize);
     formData.append("fileType", typeOfFile);
 
-    // scan the resume and the job description and get the match rate
-    axios
-      .post("http://localhost:9999/api/v1/resumes/scan/", formData, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        const data = response.data;
-        setMatchRate(data.matchRate);
-        setShowResult(true);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/api/v1/resumes/scan/",
+        formData,
+        { withCredentials: true }
+      );
+      const data = response.data;
+      setMatchRate(data.matchRate);
+      setShowResult(true);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const handleResumeFileChange = (event) => {
@@ -71,10 +69,6 @@ const Home = ({ isLoggedIn }) => {
   const handleGoBack = () => {
     setMatchRate("");
     setShowResult(false);
-  };
-
-  const loadFileName = (name) => {
-    setResumeFile("");
   };
 
   return (
@@ -130,7 +124,6 @@ const Home = ({ isLoggedIn }) => {
               </Button>
             </Form>
           </Col>
-          {isLoggedIn && <History loadedFile={loadFileName} />}
         </Row>
       )}
     </>

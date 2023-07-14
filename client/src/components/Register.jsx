@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState("");
 
@@ -24,37 +24,24 @@ const Register = () => {
   const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
   };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    if (password !== confirmPassword)
+      return setError("Ensure the passwords matches each other");
 
-    if (password !== confirmPassword) {
-      setError("Ensure the passwords match each other");
-      return;
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/api/v1/register",
+        { username, password, email }
+      );
+
+      setError("");
+      setConfirmation(response.data.message);
+      window.location.href = "/login";
+    } catch (error) {
+      setError(error.response.data.message);
     }
-
-    fetch("http://localhost:9999/api/v1/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-        email,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        // there is an error
-        if (data.message) return setError(data.message);
-
-        setError("");
-        setConfirmation("Success! Your signup process is complete.");
-        window.location.href = "/login";
-      });
   };
 
   return (
@@ -63,7 +50,7 @@ const Register = () => {
         <div className="col-md-6">
           <div className="card">
             <div className="card-header">
-              <h2 className="text-center">Signup</h2>
+              <h2 className="text-center">Sign up</h2>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
@@ -124,7 +111,7 @@ const Register = () => {
 
                 <div className="text-center mt-3">
                   <button type="submit" className="btn btn-dark w-100 p-2">
-                    Signup
+                    Sign up
                   </button>
                 </div>
               </form>

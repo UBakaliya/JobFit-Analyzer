@@ -8,6 +8,7 @@ import Register from "./components/Register";
 import Account from "./components/Account";
 import axios from "axios";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
+import History from "./components/History";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -15,7 +16,7 @@ const App = () => {
   useEffect(() => {
     const checkIsLoggedIn = async () => {
       try {
-        const res = await axios.get("http://localhost:9999/api/v1/logged", {
+        const res = await axios.get("http://localhost:9999/api/v1/loggedin", {
           withCredentials: true,
         });
         setIsLoggedIn(res.data.auth);
@@ -32,13 +33,14 @@ const App = () => {
     <Router>
       <NavbarCompo isLogged={isLoggedIn}>
         <Routes>
-          <Route exact path="/" element={<Home isLoggedIn={isLoggedIn} />} />
+          <Route exact path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           {/* Protected Routes (account) */}
           <Route element={<ProtectedRoutes checkIsLoggedIn={isLoggedIn} />}>
             <Route path="/account" element={<Account />} />
+            <Route path="/history" element={<History />} />
           </Route>
         </Routes>
       </NavbarCompo>

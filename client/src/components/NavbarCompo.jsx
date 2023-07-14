@@ -6,14 +6,11 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import axios from "axios";
 
 const NavbarCompo = ({ isLogged, children }) => {
-  
   const logOut = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:9999/api/v1/logout",
-        {},
-        { withCredentials: true }
-      );
+      const response = await axios.get("http://localhost:9999/api/v1/logout", {
+        withCredentials: true,
+      });
       console.log(response.data.message);
       window.location.reload();
     } catch (error) {
@@ -25,7 +22,7 @@ const NavbarCompo = ({ isLogged, children }) => {
     <>
       <Navbar expand="lg" className="bg-body-tertiary" sticky="top">
         <Container>
-          <Navbar.Brand href="/">Resume ATS Scanner</Navbar.Brand>
+          <Navbar.Brand href="/">JobFit Analyzer</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto" />
@@ -34,11 +31,14 @@ const NavbarCompo = ({ isLogged, children }) => {
               <Nav.Link href="/about">About</Nav.Link>
 
               {isLogged ? (
-                <NavDropdown title="Profile" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/account">Account</NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={logOut}>Logout</NavDropdown.Item>
-                </NavDropdown>
+                <>
+                  <Nav.Link href="/history">History</Nav.Link>
+                  <NavDropdown title="Profile" id="basic-nav-dropdown">
+                    <NavDropdown.Item href="/account">Account</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item onClick={logOut}>Logout</NavDropdown.Item>
+                  </NavDropdown>
+                </>
               ) : (
                 <>
                   <Nav.Link href="/register">Sign Up</Nav.Link>

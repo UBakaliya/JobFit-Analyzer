@@ -1,4 +1,4 @@
-const stopWords = new Set([
+module.exports = stopWords = new Set([
   "a",
   "about",
   "above",
@@ -174,5 +174,3 @@ const stopWords = new Set([
   "yourself",
   "yourselves",
 ]);
-
-module.exports = stopWords;

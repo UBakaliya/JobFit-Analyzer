@@ -8,7 +8,7 @@ const {
   scan,
 } = require("../controller/resumesController");
 
-router.get("/:userId/:id", validateToken, getResume);
+router.get("/:id", validateToken, getResume);
 
 router.get("/", validateToken, getResumes);
 

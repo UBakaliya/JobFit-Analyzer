@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
 import { Button, ListGroup } from "react-bootstrap";
+import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
 import "../index.css";
 import axios from "axios";
 
-const History = ({ loadedFile }) => {
-  const [history, setHistory] = useState([]);
+const History = () => {
+  const [histories, setHistories] = useState([]);
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   const truncateQuery = (query, maxLength) => {
     if (query.length <= maxLength) {
@@ -22,7 +23,7 @@ const History = ({ loadedFile }) => {
           withCredentials: true,
         });
 
-        setHistory([...history, ...res.data.resumes]);
+        setHistories([...histories, ...res.data.resumes]);
       } catch (error) {
         console.log(error);
       }
@@ -31,37 +32,36 @@ const History = ({ loadedFile }) => {
   }, []);
 
   const handleDelete = async (_id) => {
-    console.log("delete ", _id);
-
     try {
       const res = await axios.delete(
         `http://localhost:9999/api/v1/resumes/${_id}`,
         { withCredentials: true }
       );
       console.log(res.data);
-      setHistory(history.filter((obj) => obj._id !== _id));
+      setHistories(histories.filter((obj) => obj._id !== _id));
     } catch (error) {
       console.log(error);
     }
   };
-
-  const handleLoad = (item) => {
-    // Perform the loading operation here
-    console.log("Loading item:", item);
-  };
-
+  
   const handleClearAll = async () => {
     try {
-      // delete all
       const res = await axios.delete("http://localhost:9999/api/v1/resumes/", {
         withCredentials: true,
       });
       console.log(res.data.message);
-      setHistory([]);
+      setHistories([]);
     } catch (error) {
       console.log(error);
     }
   };
+
+  /************************************************************************************
+   * @description:THIS IS NOT BEING USED IN THE VERSION OF THE APPLICATION
+   * const handleLoad = (item) => {
+   * console.log("Loading item:", item);
+   * };
+   ************************************************************************************/
 
   const getFormattedDate = (date) => {
     const formateDate = new Date(date);
@@ -79,7 +79,7 @@ const History = ({ loadedFile }) => {
       <div className="history-box">
         <div className="history-header d-flex justify-content-between align-items-center mb-3">
           <h3 className="history-title">History</h3>
-          {history.length !== 0 && (
+          {histories.length !== 0 && (
             <Button
               variant="danger"
               className="history-clear-button"
@@ -90,38 +90,40 @@ const History = ({ loadedFile }) => {
           )}
         </div>
         <div className="history-items">
-          {history.length === 0 ? (
+          {histories.length === 0 ? (
             <p className="text-center">No history available</p>
           ) : (
             <div className="history-scroll">
               <ListGroup>
-                {history.map(({ fileName, _id, createdAt }) => (
+                {histories.map(({ fileName, _id, createdAt }) => (
                   <ListGroup.Item
                     key={_id}
                     className="d-flex justify-content-between align-items-center"
+                    onMouseEnter={() => setHoveredItem(_id)}
+                    onMouseLeave={() => setHoveredItem(null)}
                   >
                     <div className="item-container">
                       {getFormattedDate(createdAt)} -{" "}
                       {truncateQuery(fileName, 50)}
                     </div>
                     <div>
-                      {/* <Button
-                        variant="primary"
-                        className="load-button pr-5"
-                        style={{ marginRight: "10px" }}
-                        onClick={() => {
-                          handleLoad(_id);
-                          loadedFile(fileName);
-                        }}
-                      >
-                        <FaCloudUploadAlt className="upload-icon" /> Load
-                      </Button> */}
-                      <Button
-                        variant="outline-danger"
-                        onClick={() => handleDelete(_id)}
-                      >
-                        <FaTimes />
-                      </Button>
+                      {/***********************************************************************************
+                       * @description: THIS IS FUTURE IS NOT BING ADDED TO THE VERSION OF THIS APPLICATION
+                       * <Button variant="primary"
+                       *  className="load-button pr-5" style={{ marginRight: "10px" }}
+                       *  onClick={() => handleLoad(_id)}>
+                       *  <FaCloudUploadAlt className="upload-icon" /> Load
+                       * </Button>
+                       ***********************************************************************************/}
+
+                      {hoveredItem === _id && (
+                        <Button
+                          variant="outline-danger"
+                          onClick={() => handleDelete(_id)}
+                        >
+                          <FaTimes />
+                        </Button>
+                      )}
                     </div>
                   </ListGroup.Item>
                 ))}

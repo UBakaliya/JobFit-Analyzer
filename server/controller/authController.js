@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { generateJWTAccessToken } = require("../middleware/verifyToken");
 require("dotenv").config();
 
-// @desc    Auth login user
+// @desc    Login user
 // @route   POST /api/v1/login
 // @access  Public
 const login = async (req, res) => {
@@ -28,8 +28,8 @@ const login = async (req, res) => {
 
       // store the token in the cookies
       res.cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
+        maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
         httpOnly: true,
-        maxAge: 12 * 60 * 60 * 1000,
       });
 
       req.user = user;
@@ -44,28 +44,32 @@ const login = async (req, res) => {
   }
 };
 
-// @desc    Check if the user if logged in
-// @route   POST /api/v1/logged
-// @access  Private
-const logged = (req, res) => {
-  const cookie = req.headers.cookie;
-  if (cookie) {
+// @desc    Check if the user is logged in
+// @route   GET /api/v1/loggedin
+// @access  Public
+const loggedIn = (req, res) => {
+  console.log(req.cookies);
+  try {
+    const cookie = req.headers.cookie;
+    if (!req.headers.cookie)
+      return res.json({ auth: false, message: "Not Logged in user" });
     const token = cookie.split("=")[1];
     const match = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    if (!match) {
-      return res.status(403).json({ auth: false, message: "Not Logged in" });
+    if (match) {
+      res.status(200).json({ auth: true, message: "Login" });
     }
-    return res.status(200).json({ auth: true, message: "Login" });
+  } catch (error) {
+    res.json({ auth: false, message: "Not Logged in user" });
   }
 };
 
-// @desc    Auth register and save it to db
+// @desc    Register new user and save the user details
 // @route   POST /api/v1/register
 // @access  Public
 const register = async (req, res) => {
-  const { username, email, password } = req.body;
-
   try {
+    const { username, email, password } = req.body;
+
     // create new user in db
     const newUser = await new User({
       username,
@@ -74,7 +78,9 @@ const register = async (req, res) => {
     });
 
     (await newUser.save())
-      ? res.json({ _id: newUser._id })
+      ? res
+          .status(200)
+          .json({ message: "Success! Your signup process is complete!" })
       : res.statusCode(500).json({ message: "can't add user to db" });
   } catch (error) {
     // user already exists
@@ -97,7 +103,7 @@ const logout = (req, res) => {
     .json({ message: "Logging out..." });
 };
 
-// @desc    Auth get user account information
+// @desc    Get user account details
 // @route   GET /api/v1/profile
 // @access  Private
 const getProfile = (req, res) => {
@@ -110,7 +116,7 @@ const getProfile = (req, res) => {
   }
 };
 
-// @desc    Auth Delete user account
+// @desc    Delete user account
 // @route   DELETE /api/v1/profile/delete
 // @access  Private
 const deleteProfile = async (req, res) => {
@@ -121,16 +127,16 @@ const deleteProfile = async (req, res) => {
       res
         .status(200)
         .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
-        .json({ message: "Deleted a user" });
+        .json({ message: "User is Deleted successfully" });
     } else {
-      res.json({ message: "Can't delete user" });
+      res.json({ message: "User deletion failed. Please try again later" });
     }
   } catch (error) {
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 };
 
-// @desc    Auth update user password
+// @desc    Update user password
 // @route   PUT /api/v1/profile/resetpassword
 // @access  Private
 const resetPassword = async (req, res) => {
@@ -172,5 +178,5 @@ module.exports = {
   getProfile,
   deleteProfile,
   resetPassword,
-  logged,
+  loggedIn,
 };

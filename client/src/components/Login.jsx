@@ -15,31 +15,25 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    axios
-      .post(
+    try {
+      const response = await axios.post(
         "http://localhost:9999/api/v1/login",
-        {
-          email,
-          password,
-        },
+        { email, password },
         { withCredentials: true }
-      )
-      .then((response) => {
-        setSuccess(response.data.message);
-        setError("");
-        window.location.href = "/";
-      })
-      .catch((error) => {
-        setError(error.response.data.message);
-      });
+      );
+      setSuccess(response.data.message);
+      setError("");
+      window.location.href = "/";
+    } catch (error) {
+      setError(error.response.data.message);
+    }
   };
 
   return (
     <>
-    {/* <title>Login</title> */}
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="col-md-6">

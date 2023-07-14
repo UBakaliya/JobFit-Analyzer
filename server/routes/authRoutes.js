@@ -6,7 +6,7 @@ const {
   getProfile,
   deleteProfile,
   resetPassword,
-  logged,
+  loggedIn,
 } = require("../controller/authController");
 const { validateToken } = require("../middleware/verifyToken");
 
@@ -14,9 +14,9 @@ router.post("/login", login);
 
 router.post("/register", register);
 
-router.get("/logged", validateToken, logged);
+router.get("/loggedin", loggedIn);
 
-router.post("/logout", validateToken, logout);
+router.get("/logout", validateToken, logout);
 
 router.get("/profile", validateToken, getProfile);
 

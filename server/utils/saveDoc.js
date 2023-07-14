@@ -22,7 +22,7 @@ const saveResume = async (req) => {
       size: req.body.fileSize,
     });
 
-    // // save the use data
+    // save the use data
     await User.findByIdAndUpdate(
       { _id: user._id },
       { $push: { resumes: newResume } },

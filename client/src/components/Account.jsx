@@ -13,7 +13,6 @@ const Account = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [_id, setId] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   async function getUserProfile() {
@@ -21,12 +20,7 @@ const Account = () => {
       const response = await axios.get("http://localhost:9999/api/v1/profile", {
         withCredentials: true,
       });
-      console.log(response.data);
-      setUser({
-        ...user,
-        name: response.data.username,
-        email: response.data.email,
-      });
+      setUser({ name: response.data.username, email: response.data.email });
     } catch (error) {
       setError(error.response.data.message);
     }
@@ -42,49 +36,46 @@ const Account = () => {
   const handleNewPasswordChange = (e) => {
     setNewPassword(e.target.value);
   };
-  const handleResetPassword = (e) => {
+
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     if (!newPassword || !oldPassword) {
       return setError("*All fields are required");
     }
 
-    axios
-      .put(
+    try {
+      const res = await axios.put(
         `http://localhost:9999/api/v1/profile/resetpassword/`,
         { oldPassword, newPassword },
         { withCredentials: true }
-      )
-      .then((res) => {
-        setSuccess(res.data.message);
-        setError("");
-      })
-      .catch((err) => {
-        setError("*" + err.response.data.message);
-        setSuccess("");
-      });
+      );
+      setSuccess(res.data.message);
+      setError("");
+    } catch (err) {
+      setError("*" + err.response.data.message);
+      setSuccess("");
+    }
   };
 
   const handledDeleteAccount = () => {
     setShowConfirmation(true);
   };
 
-  const handleConfirmDelete = () => {
-    axios
-      .delete(`http://localhost:9999/api/v1/profile/delete/`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res);
-        setSuccess(res.data.message);
-        setError("");
-        setShowConfirmation(false);
-        window.location.reload();
-      })
-      .catch((err) => {
-        setError("Can't delete user" + err.response.data.message);
-        setSuccess("");
-        setShowConfirmation(false);
-      });
+  const handleConfirmDelete = async () => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:9999/api/v1/profile/delete/`,
+        { withCredentials: true }
+      );
+      setSuccess(res.data.message);
+      setError("");
+      setShowConfirmation(false);
+      window.location.href = "/";
+    } catch (err) {
+      setError("*" + err.response.data.message);
+      setSuccess("");
+      setShowConfirmation(false);
+    }
   };
 
   const handleCloseConfirmation = () => {
