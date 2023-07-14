@@ -42,6 +42,11 @@ const scanHelper = (resume, jobDescription) => {
     preprocessText(jobDescription)
   );
 
+  // in the case there is not match after removing the stop words
+  if (resumeTokens.length === 0 || jobDescriptionTokens.length === 0) {
+    return "0.00";
+  }
+
   // Create TF-IDF vectorizers
   const tfidfVectorizer = new natural.TfIdf();
 

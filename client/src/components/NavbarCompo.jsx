@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -6,7 +5,8 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import axios from "axios";
 
 const NavbarCompo = ({ isLogged, children }) => {
-  const logOut = async () => {
+
+  const handleLogout = async () => {
     try {
       const response = await axios.get("http://localhost:9999/api/v1/logout", {
         withCredentials: true,
@@ -36,7 +36,9 @@ const NavbarCompo = ({ isLogged, children }) => {
                   <NavDropdown title="Profile" id="basic-nav-dropdown">
                     <NavDropdown.Item href="/account">Account</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item onClick={logOut}>Logout</NavDropdown.Item>
+                    <NavDropdown.Item onClick={handleLogout}>
+                      Logout
+                    </NavDropdown.Item>
                   </NavDropdown>
                 </>
               ) : (

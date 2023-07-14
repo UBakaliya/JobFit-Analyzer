@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Button, ListGroup } from "react-bootstrap";
 import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
 import "../index.css";
