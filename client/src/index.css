@@ -1,41 +1,36 @@
-
 .history-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: 75vh;
-  }
-  
-  .history-box {
-    text-align: center;
-    width: 1000px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 5px;
-  }
-  
-  .history-scroll {
-    max-height: 450px;
-    overflow-y: auto;
-  }
-  
-  .list-group-item {
-    margin-top: 10px;
-  }
-  
-  .list-group-item:first-child {
-    margin-top: 0;
-  }
-  
-  .history-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .history-title {
-    margin: 0;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 75vh;
+}
+
+.history-box {
+  text-align: center;
+  width: 1000px;
+  padding: 20px;
+}
+
+.history-scroll {
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.list-group-item {
+  margin-top: 10px;
+}
+
+.list-group-item:first-child {
+  margin-top: 0;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.history-title {
+  margin: 0;
+}

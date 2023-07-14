@@ -16,12 +16,12 @@ const Home = () => {
     const megabytes = bytes / (1024 * 1024);
     return megabytes.toFixed(3);
   };
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const fileName = resumeFile.name.toLowerCase();
-    const typeOfFileToAccept = [".docx", ".pdf"]; 
+    const typeOfFileToAccept = [".docx", ".pdf"];
     let typeOfFile = "";
 
     // validate file types
@@ -78,7 +78,7 @@ const Home = () => {
       ) : (
         <Row className="mt-5 m-0">
           <Col xs={12} sm={6} className="offset-sm-3">
-            <Form className="bg-light p-5 rounded" onSubmit={handleSubmit}>
+            <Form className="card bg-light p-5 rounded" onSubmit={handleSubmit}>
               <Form.Group>
                 <Form.Label className="font-weight-bold mb-4 fs-4">
                   Upload Your Resume
@@ -120,7 +120,7 @@ const Home = () => {
                 className="w-100 mt-4 p-2"
                 type="submit"
               >
-                START SCANNING
+                Start JobFit Analysis
               </Button>
             </Form>
           </Col>

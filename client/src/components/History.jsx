@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, ListGroup } from "react-bootstrap";
 import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
 import "../index.css";
@@ -6,7 +6,6 @@ import axios from "axios";
 
 const History = () => {
   const [histories, setHistories] = useState([]);
-  const [hoveredItem, setHoveredItem] = useState(null);
 
   const truncateQuery = (query, maxLength) => {
     if (query.length <= maxLength) {
@@ -43,7 +42,7 @@ const History = () => {
       console.log(error);
     }
   };
-  
+
   const handleClearAll = async () => {
     try {
       const res = await axios.delete("http://localhost:9999/api/v1/resumes/", {
@@ -55,13 +54,6 @@ const History = () => {
       console.log(error);
     }
   };
-
-  /************************************************************************************
-   * @description:THIS IS NOT BEING USED IN THE VERSION OF THE APPLICATION
-   * const handleLoad = (item) => {
-   * console.log("Loading item:", item);
-   * };
-   ************************************************************************************/
 
   const getFormattedDate = (date) => {
     const formateDate = new Date(date);
@@ -76,7 +68,7 @@ const History = () => {
 
   return (
     <div className="history-container mt-5">
-      <div className="history-box">
+      <div className="card bg-light history-box">
         <div className="history-header d-flex justify-content-between align-items-center mb-3">
           <h3 className="history-title">History</h3>
           {histories.length !== 0 && (
@@ -99,31 +91,19 @@ const History = () => {
                   <ListGroup.Item
                     key={_id}
                     className="d-flex justify-content-between align-items-center"
-                    onMouseEnter={() => setHoveredItem(_id)}
-                    onMouseLeave={() => setHoveredItem(null)}
                   >
                     <div className="item-container">
                       {getFormattedDate(createdAt)} -{" "}
                       {truncateQuery(fileName, 50)}
                     </div>
                     <div>
-                      {/***********************************************************************************
-                       * @description: THIS IS FUTURE IS NOT BING ADDED TO THE VERSION OF THIS APPLICATION
-                       * <Button variant="primary"
-                       *  className="load-button pr-5" style={{ marginRight: "10px" }}
-                       *  onClick={() => handleLoad(_id)}>
-                       *  <FaCloudUploadAlt className="upload-icon" /> Load
-                       * </Button>
-                       ***********************************************************************************/}
-
-                      {hoveredItem === _id && (
-                        <Button
-                          variant="outline-danger"
-                          onClick={() => handleDelete(_id)}
-                        >
-                          <FaTimes />
-                        </Button>
-                      )}
+                      <Button
+                        variant="outline-danger"
+                        className={"delete-button"}
+                        onClick={() => handleDelete(_id)}
+                      >
+                        <FaTimes />
+                      </Button>
                     </div>
                   </ListGroup.Item>
                 ))}
