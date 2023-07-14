@@ -17,7 +17,7 @@ const Account = () => {
 
   async function getUserProfile() {
     try {
-      const response = await axios.get("http://localhost:9999/api/v1/profile", {
+      const response = await axios.get("profile", {
         withCredentials: true,
       });
       setUser({ name: response.data.username, email: response.data.email });
@@ -45,7 +45,7 @@ const Account = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:9999/api/v1/profile/resetpassword/`,
+        `profile/resetpassword/`,
         { oldPassword, newPassword },
         { withCredentials: true }
       );
@@ -63,10 +63,9 @@ const Account = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const res = await axios.delete(
-        `http://localhost:9999/api/v1/profile/delete/`,
-        { withCredentials: true }
-      );
+      const res = await axios.delete("profile/delete/", {
+        withCredentials: true,
+      });
       setSuccess(res.data.message);
       setError("");
       setShowConfirmation(false);

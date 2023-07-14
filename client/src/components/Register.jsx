@@ -31,10 +31,11 @@ const Register = () => {
       return setError("Ensure the passwords matches each other");
 
     try {
-      const response = await axios.post(
-        "http://localhost:9999/api/v1/register",
-        { username, password, email }
-      );
+      const response = await axios.post("register", {
+        username,
+        password,
+        email,
+      });
 
       setError("");
       setConfirmation(response.data.message);

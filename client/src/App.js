@@ -13,10 +13,13 @@ import History from "./components/History";
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
+  // base url to make request to the server
+  axios.defaults.baseURL = "http://localhost:9999/api/v1/";
+
   useEffect(() => {
     const checkIsLoggedIn = async () => {
       try {
-        const res = await axios.get("http://localhost:9999/api/v1/loggedin", {
+        const res = await axios.get("loggedin", {
           withCredentials: true,
         });
         setIsLoggedIn(res.data.auth);

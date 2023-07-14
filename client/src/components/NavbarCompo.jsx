@@ -5,10 +5,9 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import axios from "axios";
 
 const NavbarCompo = ({ isLogged, children }) => {
-
   const handleLogout = async () => {
     try {
-      const response = await axios.get("http://localhost:9999/api/v1/logout", {
+      const response = await axios.get("logout", {
         withCredentials: true,
       });
       console.log(response.data.message);

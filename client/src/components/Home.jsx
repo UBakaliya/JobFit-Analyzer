@@ -44,11 +44,9 @@ const Home = () => {
     formData.append("fileType", typeOfFile);
 
     try {
-      const response = await axios.post(
-        "http://localhost:9999/api/v1/resumes/scan/",
-        formData,
-        { withCredentials: true }
-      );
+      const response = await axios.post("resumes/scan", formData, {
+        withCredentials: true,
+      });
       const data = response.data;
       setMatchRate(data.matchRate);
       setShowResult(true);
