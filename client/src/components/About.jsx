@@ -1,8 +1,13 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const About = () => {
   return (
     <div className="container mt-5">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>JobFit Analyzer | About</title>
+      </Helmet>
       <div className="row">
         <div className="col-lg-8 offset-lg-2">
           <div className="card bg-light shadow p-4">

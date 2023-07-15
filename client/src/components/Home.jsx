@@ -67,6 +67,7 @@ const Home = () => {
     const value = event.target.value;
     setJobDescription(value);
   };
+  
   const handleGoBack = () => {
     setMatchRate("");
     setShowResult(false);

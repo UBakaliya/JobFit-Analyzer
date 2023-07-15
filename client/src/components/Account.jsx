@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, Container, Form, Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import { FaTrash } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 
 const Account = () => {
   const [user, setUser] = useState({
@@ -99,6 +100,10 @@ const Account = () => {
 
   return (
     <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>JobFit Analyzer | Profile</title>
+      </Helmet>
       {isLoading ? (
         <div className="loading-overlay position-fixed top-0 start-0 h-100 w-100 d-flex align-items-center justify-content-center">
           <div className="spinner-border text-primary" role="status">

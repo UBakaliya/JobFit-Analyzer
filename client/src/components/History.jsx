@@ -3,6 +3,7 @@ import { Button, ListGroup } from "react-bootstrap";
 import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
 import "../index.css";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 
 const History = () => {
   const [histories, setHistories] = useState([]);
@@ -73,7 +74,10 @@ const History = () => {
 
   return (
     <>
-      {" "}
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>JobFit Analyzer | History</title>
+      </Helmet>
       {isLoading ? (
         <div className="loading-overlay position-fixed top-0 start-0 h-100 w-100 d-flex align-items-center justify-content-center">
           <div className="spinner-border text-primary" role="status">
