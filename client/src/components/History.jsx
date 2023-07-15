@@ -6,6 +6,7 @@ import axios from "axios";
 
 const History = () => {
   const [histories, setHistories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const truncateQuery = (query, maxLength) => {
     if (query.length <= maxLength) {
@@ -18,12 +19,14 @@ const History = () => {
   useEffect(() => {
     const getResumes = async () => {
       try {
+        setIsLoading(true);
         const res = await axios.get("resumes", {
           withCredentials: true,
         });
-
+        setIsLoading(false);
         setHistories([...histories, ...res.data.resumes]);
       } catch (error) {
+        setIsLoading(false);
         console.log(error);
       }
     };
@@ -44,12 +47,15 @@ const History = () => {
 
   const handleClearAll = async () => {
     try {
+      setIsLoading(true);
       const res = await axios.delete("resumes", {
         withCredentials: true,
       });
+      setIsLoading(false);
       console.log(res.data.message);
       setHistories([]);
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
     }
   };
@@ -66,52 +72,63 @@ const History = () => {
   };
 
   return (
-    <div className="history-container mt-5">
-      <div className="card bg-light history-box">
-        <div className="history-header d-flex justify-content-between align-items-center mb-3">
-          <h3 className="history-title">History</h3>
-          {histories.length !== 0 && (
-            <Button
-              variant="danger"
-              className="history-clear-button"
-              onClick={handleClearAll}
-            >
-              Clear All
-            </Button>
-          )}
+    <>
+      {" "}
+      {isLoading ? (
+        <div className="loading-overlay position-fixed top-0 start-0 h-100 w-100 d-flex align-items-center justify-content-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
         </div>
-        <div className="history-items">
-          {histories.length === 0 ? (
-            <p className="text-center">No history available</p>
-          ) : (
-            <div className="history-scroll">
-              <ListGroup>
-                {histories.map(({ fileName, _id, createdAt }) => (
-                  <ListGroup.Item
-                    key={_id}
-                    className="d-flex justify-content-between align-items-center"
-                  >
-                    <div className="item-container">
-                      {getFormattedDate(createdAt)} -{" "}
-                      {truncateQuery(fileName, 50)}
-                    </div>
-                    <div>
-                      <Button
-                        variant="outline-danger"
-                        className={"delete-button"}
-                        onClick={() => handleDelete(_id)}
-                      >
-                        <FaTimes />
-                      </Button>
-                    </div>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
+      ) : (
+        <div className="history-container mt-5">
+          <div className="card bg-light history-box">
+            <div className="history-header d-flex justify-content-between align-items-center mb-3">
+              <h3 className="history-title">History</h3>
+              {histories.length !== 0 && (
+                <Button
+                  variant="danger"
+                  className="history-clear-button"
+                  onClick={handleClearAll}
+                >
+                  Clear All
+                </Button>
+              )}
             </div>
-          )}
+            <div className="history-items">
+              {histories.length === 0 ? (
+                <p className="text-center">No history available</p>
+              ) : (
+                <div className="history-scroll">
+                  <ListGroup>
+                    {histories.map(({ fileName, _id, createdAt }) => (
+                      <ListGroup.Item
+                        key={_id}
+                        className="d-flex justify-content-between align-items-center"
+                      >
+                        <div className="item-container">
+                          {getFormattedDate(createdAt)} -{" "}
+                          {truncateQuery(fileName, 50)}
+                        </div>
+                        <div>
+                          <Button
+                            variant="outline-danger"
+                            className={"delete-button"}
+                            onClick={() => handleDelete(_id)}
+                          >
+                            <FaTimes />
+                          </Button>
+                        </div>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

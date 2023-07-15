@@ -15,7 +15,7 @@ const App = () => {
 
   // base url to make request to the server
   axios.defaults.baseURL = "http://localhost:9999/api/v1/";
-
+  
   useEffect(() => {
     const checkIsLoggedIn = async () => {
       try {
@@ -24,8 +24,8 @@ const App = () => {
         });
         setIsLoggedIn(res.data.auth);
       } catch (error) {
-        console.log(error);
         setIsLoggedIn(false);
+        console.log(error);
       }
     };
 
