@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { Helmet } from "react-helmet";
 
 const Login = () => {
+  useEffect(() => {
+    document.title = "JobFit Analyzer | Login";
+  }, []);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -19,7 +22,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setIsLoading(true);
       const response = await axios.post(
@@ -40,10 +42,6 @@ const Login = () => {
 
   return (
     <>
-     <Helmet>
-        <meta charSet="utf-8" />
-        <title>JobFit Analyzer | Login</title>
-      </Helmet>
       {isLoading ? (
         <div className="loading-overlay position-fixed top-0 start-0 h-100 w-100 d-flex align-items-center justify-content-center">
           <div className="spinner-border text-primary" role="status">

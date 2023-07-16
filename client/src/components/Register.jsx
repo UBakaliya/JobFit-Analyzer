@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { Helmet } from "react-helmet";
 
 const Register = () => {
+  useEffect(() => {
+    document.title = "JobFit Analyzer | Sign Up";
+  }, []);
+
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -65,10 +68,6 @@ const Register = () => {
 
   return (
     <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>JobFit Analyzer | Register</title>
-      </Helmet>
       {isLoading ? (
         <div className="loading-overlay position-fixed top-0 start-0 h-100 w-100 d-flex align-items-center justify-content-center">
           <div className="spinner-border text-primary" role="status">

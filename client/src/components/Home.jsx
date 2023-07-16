@@ -28,7 +28,7 @@ const Home = () => {
     // validate file types
     if (fileName.endsWith(typeOfFileToAccept[0])) typeOfFile = ".docx";
     else if (fileName.endsWith(typeOfFileToAccept[1])) typeOfFile = ".pdf";
-    else return setError("Invalid file type. Accepted formats: PDF, DOCX");
+    else return setError("Invalid file format. Accepted formats: PDF, DOCX");
 
     // convert this file to mb
     const fileSize = convertToMB();
@@ -45,7 +45,6 @@ const Home = () => {
     formData.append("fileType", typeOfFile);
 
     try {
-      setIsLoading(true);
       const response = await axios.post("resumes/scan", formData, {
         withCredentials: true,
       });
@@ -67,7 +66,7 @@ const Home = () => {
     const value = event.target.value;
     setJobDescription(value);
   };
-  
+
   const handleGoBack = () => {
     setMatchRate("");
     setShowResult(false);
