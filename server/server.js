@@ -8,9 +8,6 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-// Connect with database
-connectWithDB();
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -40,4 +37,11 @@ app.use("/api/v1", authRoutes);
 // Resume routes
 app.use("/api/v1/resumes", resumesRoutes);
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+// Connect with database ans start the server
+connectWithDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
