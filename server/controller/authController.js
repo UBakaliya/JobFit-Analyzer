@@ -25,13 +25,13 @@ const login = async (req, res) => {
     if (comparePass) {
       // generate jwt token
       const token = generateJWTAccessToken(user);
-      console.log("JWT TOKEN", token);
+
       // store the token in the cookies
       res.cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
         maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
         httpOnly: true,
       });
-      
+
       res.json({ message: "You are logged in successfully!" });
     } else {
       return res
@@ -47,6 +47,7 @@ const login = async (req, res) => {
 // @route   GET /api/v1/loggedin
 // @access  Public
 const loggedIn = (req, res) => {
+  console.log(req.cookies);
   try {
     const cookie = req.headers.cookie;
     if (!req.headers.cookie)

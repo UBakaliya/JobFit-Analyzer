@@ -14,9 +14,8 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   // base url to make request to the server
-  // axios.defaults.baseURL = "https://jobfit-analyzer-server.onrender.com/api/v1/";
-  //http://localhost:3000
-  axios.defaults.baseURL = "http://localhost:9999/api/v1/";
+  axios.defaults.baseURL = "https://jobfit-analyzer-server.onrender.com/api/v1/";
+  // axios.defaults.baseURL = "http://localhost:9999/api/v1/";
 
   useEffect(() => {
     const checkIsLoggedIn = async () => {
@@ -24,6 +23,7 @@ const App = () => {
         const res = await axios.get("loggedin", {
           withCredentials: true,
         });
+        console.log(res);
         setIsLoggedIn(res.data.auth);
       } catch (error) {
         setIsLoggedIn(false);
