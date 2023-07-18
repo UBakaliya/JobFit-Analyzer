@@ -29,7 +29,7 @@ const login = async (req, res) => {
       // store the token in the cookies
       res.cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
         maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
-        httpOnly: true,
+        // httpOnly: true,
       });
 
       res.json({ message: "You are logged in successfully!" });
@@ -47,7 +47,6 @@ const login = async (req, res) => {
 // @route   GET /api/v1/loggedin
 // @access  Public
 const loggedIn = (req, res) => {
-
   try {
     const cookie = req.headers.cookie;
     if (!req.headers.cookie)
