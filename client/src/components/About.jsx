@@ -6,7 +6,7 @@ const About = () => {
   }, []);
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 mb-5">
       <div className="row">
         <div className="col-lg-8 offset-lg-2">
           <div className="card bg-light shadow p-4">
