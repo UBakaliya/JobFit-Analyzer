@@ -25,7 +25,7 @@ const login = async (req, res) => {
     if (comparePass) {
       // generate jwt token
       const token = generateJWTAccessToken(user);
-
+      console.log("JWT TOKEN", token);
       // store the token in the cookies
       res.cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
         maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
