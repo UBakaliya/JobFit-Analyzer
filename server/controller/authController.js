@@ -31,7 +31,7 @@ const login = async (req, res) => {
         maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
         httpOnly: true,
       });
-
+      
       res.json({ message: "You are logged in successfully!" });
     } else {
       return res
