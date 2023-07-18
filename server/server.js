@@ -37,7 +37,7 @@ app.use("/api/v1", authRoutes);
 // Resume routes
 app.use("/api/v1/resumes", resumesRoutes);
 
-// Connect with database ans start the server
+// Connect with database and start the server
 connectWithDB()
   .then(() => {
     app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
