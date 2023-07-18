@@ -50,7 +50,7 @@ const loggedIn = (req, res) => {
   try {
     const cookie = req.headers.cookie;
     if (!req.headers.cookie)
-      return res.json({ auth: false, message: "Not Logged in user" });
+      return res.json({ auth: false, message: "No cookie in the headers" });
     const token = cookie.split("=")[1];
     const match = jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (match) {
