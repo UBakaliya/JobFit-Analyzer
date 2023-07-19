@@ -12,7 +12,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [cookies, setCookie] = useCookies(["access_token", "refresh_token"]);
+  const [, setCookie] = useCookies(["access_token", "refresh_token"]);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
