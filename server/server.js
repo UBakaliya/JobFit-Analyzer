@@ -15,13 +15,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload());
 
-const corsOptions = {
-  credentials: true,
-  // origin: "http://localhost:3000",
-  origin: "https://jobfit-analyzer.onrender.com",
-};
+// const corsOptions = {
+//   credentials: true,
+//   // origin: "http://localhost:3000",
+//   origin: "https://jobfit-analyzer.onrender.com",
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
