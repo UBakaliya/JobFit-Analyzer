@@ -19,7 +19,7 @@ const History = () => {
       return query.substring(0, maxLength - 3) + "...";
     }
   };
-
+  
   useEffect(() => {
     const getResumes = async () => {
       try {
@@ -28,14 +28,17 @@ const History = () => {
           withCredentials: true,
         });
         setIsLoading(false);
-        setHistories([...histories, ...res.data.resumes]);
+        setHistories((prevHistories) => [
+          ...prevHistories,
+          ...res.data.resumes,
+        ]);
       } catch (error) {
         setIsLoading(false);
         console.log(error);
       }
     };
     getResumes();
-  }, []);
+  }, [histories]);
 
   const handleDelete = async (_id) => {
     try {
@@ -67,9 +70,9 @@ const History = () => {
   const getFormattedDate = (date) => {
     const formateDate = new Date(date);
 
-    const month = formateDate.toLocaleString("en-US", { month: "long" });
-    const day = formateDate.toLocaleString("en-US", { day: "numeric" });
-    const year = formateDate.toLocaleString("en-US", { year: "numeric" });
+    // const month = formateDate.toLocaleString("en-US", { month: "long" });
+    // const day = formateDate.toLocaleString("en-US", { day: "numeric" });
+    // const year = formateDate.toLocaleString("en-US", { year: "numeric" });
     const time = formateDate.toLocaleString("en-US", { timeStyle: "medium" });
 
     return <span className="formatted-date">{time}</span>;
