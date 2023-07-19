@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const Login = () => {
   useEffect(() => {
@@ -11,6 +12,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [cookies, setCookie] = useCookies(["access_token", "refresh_token"]);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -32,7 +34,9 @@ const Login = () => {
       setIsLoading(false);
       setSuccess(response.data.message);
       setError("");
-      window.location.href = "/";
+      setCookie("access_token", response.data.token);
+
+      // window.location.href = "/";
     } catch (error) {
       setIsLoading(false);
       setSuccess("");

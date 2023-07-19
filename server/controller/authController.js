@@ -32,7 +32,7 @@ const login = async (req, res) => {
           maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
           httpOnly: true,
         })
-        .json({ message: "You are logged in successfully!" });
+        .json({ message: "You are logged in successfully!", token: token });
     } else {
       return res
         .status(401)
@@ -47,7 +47,7 @@ const login = async (req, res) => {
 // @route   GET /api/v1/loggedin
 // @access  Public
 const loggedIn = (req, res) => {
-  console.log(req.headers);
+  console.log(req.headers.cookie);
   try {
     const cookie = req.headers.cookie;
     if (!req.headers.cookie)
