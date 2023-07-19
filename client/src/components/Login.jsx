@@ -32,7 +32,7 @@ const Login = () => {
       setIsLoading(false);
       setSuccess(response.data.message);
       setError("");
-      // window.location.href = "/";
+      window.location.href = "/";
     } catch (error) {
       setIsLoading(false);
       setSuccess("");
