@@ -17,7 +17,8 @@ app.use(fileUpload());
 
 const corsOptions = {
   credentials: true,
-  origin: "http://localhost:3000",
+  // origin: "http://localhost:3000",
+  origin: "https://jobfit-analyzer.onrender.com",
 };
 
 app.use(cors(corsOptions));
