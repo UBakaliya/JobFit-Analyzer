@@ -12,7 +12,7 @@ const generateJWTAccessToken = (user) => {
 
 const validateToken = async (req, res, next) => {
   try {
-    const authorizationHeader = req.headers.cookie.split("=")[1];
+    const authorizationHeader = req.cookies.JOBFIT_ANALYZER_AUTH_TOKEN;
 
     if (authorizationHeader) {
       const user = await jwt.verify(

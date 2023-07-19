@@ -47,13 +47,12 @@ const login = async (req, res) => {
 // @route   GET /api/v1/loggedin
 // @access  Public
 const loggedIn = (req, res) => {
-  console.log(req.headers);
   try {
-    const cookie = req.headers.cookie;
-    if (!req.headers.cookie)
+    const cookie = req.cookies.JOBFIT_ANALYZER_AUTH_TOKEN;
+    if (!cookie)
       return res.json({ auth: false, message: "No cookie in the headers" });
-    const token = cookie.split("=")[1];
-    const match = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    const match = jwt.verify(cookie, process.env.JWT_SECRET_KEY);
     if (match) {
       res.status(200).json({ auth: true, message: "Login" });
     }

@@ -17,8 +17,8 @@ app.use(fileUpload());
 
 const corsOptions = {
   credentials: true,
-  // origin: "http://localhost:3000",
-  origin: "https://jobfit-analyzer.netlify.app",
+  origin: "http://localhost:3000",
+  // origin: "https://jobfit-analyzer.netlify.app",
 };
 
 app.use(cors(corsOptions));
