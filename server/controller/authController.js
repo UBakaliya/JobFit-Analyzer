@@ -33,7 +33,6 @@ const login = async (req, res) => {
           httpOnly: true,
         })
         .json({ message: "You are logged in successfully!" });
-        
     } else {
       return res
         .status(401)
@@ -48,7 +47,7 @@ const login = async (req, res) => {
 // @route   GET /api/v1/loggedin
 // @access  Public
 const loggedIn = (req, res) => {
-  console.log(req.cookies)
+  console.log(req.headers.cookies);
   try {
     const cookie = req.headers.cookie;
     if (!req.headers.cookie)
