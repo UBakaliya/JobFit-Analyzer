@@ -30,7 +30,7 @@ const login = async (req, res) => {
       res.cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
         maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "strict",
       });
 
