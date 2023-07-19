@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, ListGroup } from "react-bootstrap";
-import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import "../index.css";
 import axios from "axios";
 
@@ -19,7 +19,7 @@ const History = () => {
       return query.substring(0, maxLength - 3) + "...";
     }
   };
-  
+
   useEffect(() => {
     const getResumes = async () => {
       try {
