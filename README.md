@@ -55,7 +55,7 @@ Follow the steps below to set up and run the application locally on your machine
    ```env
    PORT=5000
    MONGODB_URI=your_mongodb_uri
-   JWT_SECRET=your_jwt_secret
+   JWT_SECRET_KEY=your_jwt_secret
    ```
 
    Replace `your_mongodb_uri` with your MongoDB connection URI, and `your_jwt_secret` with your preferred JWT secret for authentication.
@@ -93,6 +93,3 @@ This project is licensed under the [MIT License](LICENSE).
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) - Library used for generating and verifying JWTs for user authentication.
 - [MongoDB](https://www.mongodb.com/) - NoSQL database used to store user information and resume analysis data.
 
-## Contact
-
-If you have any questions or inquiries, please feel free to reach out to us at your_email@example.com.
