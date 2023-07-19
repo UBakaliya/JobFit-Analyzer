@@ -48,6 +48,7 @@ const login = async (req, res) => {
 // @route   GET /api/v1/loggedin
 // @access  Public
 const loggedIn = (req, res) => {
+  console.log(req.cookies)
   try {
     const cookie = req.headers.cookie;
     if (!req.headers.cookie)
