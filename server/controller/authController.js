@@ -27,14 +27,13 @@ const login = async (req, res) => {
       const token = generateJWTAccessToken(user);
 
       // store the token in the cookies
-      res.cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
-        maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-      });
-
-      res.json({ message: "You are logged in successfully!" });
+      res
+        .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
+          maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
+          httpOnly: true,
+        })
+        .json({ message: "You are logged in successfully!" });
+        
     } else {
       return res
         .status(401)
