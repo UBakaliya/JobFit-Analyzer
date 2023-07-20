@@ -21,7 +21,7 @@ const corsOptions = {
   // origin: "https://jobfit-analyzer.netlify.app",
 };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
