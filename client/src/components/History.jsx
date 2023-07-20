@@ -28,7 +28,7 @@ const History = () => {
           withCredentials: true,
         });
         setIsLoading(false);
-        // setHistories(...histories, res.data.resumes);
+        setHistories(res.data.resumes);
       } catch (error) {
         setIsLoading(false);
         console.log(error);
