@@ -19,21 +19,21 @@ const History = () => {
       return query.substring(0, maxLength - 3) + "...";
     }
   };
-  const getResumes = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get("resumes", {
-        withCredentials: true,
-      });
-      setIsLoading(false);
-      setHistories(...histories, res.data.resumes);
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
+    const getResumes = async () => {
+      try {
+        setIsLoading(true);
+        const res = await axios.get("resumes", {
+          withCredentials: true,
+        });
+        setIsLoading(false);
+        // setHistories(...histories, res.data.resumes);
+      } catch (error) {
+        setIsLoading(false);
+        console.log(error);
+      }
+    };
     getResumes();
   }, []);
 
