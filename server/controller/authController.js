@@ -47,6 +47,7 @@ const login = async (req, res) => {
 // @route   GET /api/v1/loggedin
 // @access  Public
 const loggedIn = (req, res) => {
+  console.log(req.body);
   try {
     const cookie = req.cookies.JOBFIT_ANALYZER_AUTH_TOKEN;
     if (!cookie)
