@@ -23,15 +23,15 @@ const Account = () => {
   const getUserProfile = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get("profile", {
+      const response = await axios.get("profile/", {
         withCredentials: true,
       });
-      setIsLoading(false);
+      console.log(response);
       setUser({ name: response.data.username, email: response.data.email });
     } catch (error) {
-      setIsLoading(false);
       setError(error.response.data.message);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {

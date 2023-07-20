@@ -17,20 +17,13 @@ app.use(fileUpload());
 
 const corsOptions = {
   credentials: true,
-  // origin: "http://localhost:3000",
-  origin: "https://jobfit-analyzer.netlify.app",
+  origin: "http://localhost:3000",
+  // origin: "https://jobfit-analyzer.netlify.app",
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// // alow access to the client
-// app.use((req, res, next) => {
-//   // Allow sending cookies
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   next();
-// });
 
 // Authentication routes
 app.use("/api/v1", authRoutes);

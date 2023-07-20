@@ -10,7 +10,8 @@ require("dotenv").config();
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    // get one of them: email / username
+
+    // get one of them: email/username
     const user =
       (await User.findOne({ username: email })) ||
       (await User.findOne({ email }));
@@ -47,7 +48,6 @@ const login = async (req, res) => {
 // @route   GET /api/v1/loggedin
 // @access  Public
 const loggedIn = (req, res) => {
-  console.log(req.body);
   try {
     const cookie = req.cookies.JOBFIT_ANALYZER_AUTH_TOKEN;
     if (!cookie)
@@ -96,22 +96,29 @@ const register = async (req, res) => {
 // @route   GET /api/v1/logout
 // @access  Private
 const logout = (req, res) => {
-  res
-    .status(200)
-    .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
-    .json({ message: "Logging out..." });
+  try {
+    res
+      .status(200)
+      .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
+      .json({ message: "Logging out..." });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
 };
 
 // @desc    Get user account details
 // @route   GET /api/v1/profile
 // @access  Private
-const getProfile = (req, res) => {
+const getProfile = async (req, res) => {
   try {
-    const user = req.user;
     // send the data
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.json({ message: "Invalid user _id, can't file the user" });
+    }
     res.status(200).json({ email: user.email, username: user.username });
   } catch (error) {
-    res.status(301).json({ message: "Can't find the user" });
+    res.json({ message: error.message });
   }
 };
 
@@ -146,10 +153,10 @@ const resetPassword = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "Invalid user Id" });
     }
-
     const { newPassword, oldPassword } = req.body;
-    const comparePass = await bcrypt.compare(oldPassword, user.password);
 
+    const comparePass = await bcrypt.compare(oldPassword, user.password);
+    
     if (comparePass) {
       const updatePass = await User.updateOne(
         { _id },

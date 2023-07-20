@@ -1,12 +1,11 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+// Create jwt token with the user details
 const generateJWTAccessToken = (user) => {
-  const token = jwt.sign(
-    { email: user.email, username: user.username, _id: user._id },
-    process.env.JWT_SECRET_KEY,
-    { expiresIn: "12h" }
-  );
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: "12h",
+  });
   return token;
 };
 
