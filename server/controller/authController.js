@@ -100,7 +100,7 @@ const logout = (req, res) => {
 
   res
     .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
-      maxAge: null,
+      maxAge: 1,
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -138,8 +138,12 @@ const deleteProfile = async (req, res) => {
     const deleteUser = await User.deleteOne({ _id });
     if (deleteUser) {
       res
-        .status(200)
-        .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
+        .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
+          maxAge: 1,
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        })
         .json({ message: "User is Deleted successfully" });
     } else {
       res.json({ message: "User deletion failed. Please try again later" });
