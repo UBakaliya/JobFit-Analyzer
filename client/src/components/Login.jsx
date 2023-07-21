@@ -12,7 +12,6 @@ const Login = () => {
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -25,11 +24,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        "login/",
-        { email, password },
-        { withCredentials: true }
-      );
+      const response = await axios.post("login/", { email, password });
       setIsLoading(false);
       setSuccess(response.data.message);
       setError("");

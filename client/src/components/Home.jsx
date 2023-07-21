@@ -46,9 +46,7 @@ const Home = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post("resumes/scan", formData, {
-        withCredentials: true,
-      });
+      const response = await axios.post("resumes/scan", formData);
       setIsLoading(false);
       const data = response.data;
       setMatchRate(data.matchRate);
@@ -85,10 +83,7 @@ const Home = () => {
       ) : (
         <Row className="mt-5 m-0 d-flex align-items-center justify-content-center">
           <Col xs={12} sm={10} md={8} lg={6}>
-            <Form
-              className="card bg-light p-5 rounded shadow"
-              onSubmit={handleSubmit}
-            >
+            <Form className="card bg-light p-5 rounded" onSubmit={handleSubmit}>
               <Form.Group>
                 <Form.Label className="font-weight-bold mb-4 fs-4 text-center">
                   Upload Your Resume

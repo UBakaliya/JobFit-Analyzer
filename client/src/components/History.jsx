@@ -24,9 +24,7 @@ const History = () => {
     const getResumes = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get("resumes", {
-          withCredentials: true,
-        });
+        const res = await axios.get("resumes");
         setIsLoading(false);
         setHistories(res.data.resumes);
       } catch (error) {
@@ -39,9 +37,7 @@ const History = () => {
 
   const handleDelete = async (_id) => {
     try {
-      const res = await axios.delete(`resumes/${_id}`, {
-        withCredentials: true,
-      });
+      const res = await axios.delete(`resumes/${_id}`);
       console.log(res.data);
       setHistories(histories.filter((obj) => obj._id !== _id));
     } catch (error) {
@@ -52,9 +48,7 @@ const History = () => {
   const handleClearAll = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.delete("resumes", {
-        withCredentials: true,
-      });
+      const res = await axios.delete("resumes");
       setIsLoading(false);
       console.log(res.data.message);
       setHistories([]);

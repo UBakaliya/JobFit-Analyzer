@@ -34,7 +34,6 @@ const login = async (req, res) => {
           httpOnly: true,
           secure: true,
           sameSite: "none",
-          domain: "http://localhost:3000/"
         })
         .json({ message: "You are logged in successfully!", token: token });
     } else {

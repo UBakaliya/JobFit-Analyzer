@@ -23,9 +23,7 @@ const Account = () => {
   const getUserProfile = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get("profile/", {
-        withCredentials: true,
-      });
+      const response = await axios.get("profile/");
       console.log(response);
       setUser({ name: response.data.username, email: response.data.email });
     } catch (error) {
@@ -59,11 +57,10 @@ const Account = () => {
 
     try {
       setIsLoading(true);
-      const res = await axios.put(
-        `profile/resetpassword/`,
-        { oldPassword, newPassword },
-        { withCredentials: true }
-      );
+      const res = await axios.put(`profile/resetpassword/`, {
+        oldPassword,
+        newPassword,
+      });
       setIsLoading(false);
       setSuccess(res.data.message);
       setError("");
@@ -81,9 +78,7 @@ const Account = () => {
   const handleConfirmDelete = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.delete("profile/delete/", {
-        withCredentials: true,
-      });
+      const res = await axios.delete("profile/delete/");
       setIsLoading(false);
       setSuccess(res.data.message);
       setError("");
