@@ -50,18 +50,20 @@ const login = async (req, res) => {
 // @route   GET /api/v1/loggedin
 // @access  Public
 const loggedIn = (req, res) => {
-  try {
-    const cookie = req.cookies.JOBFIT_ANALYZER_AUTH_TOKEN;
-    if (!cookie)
-      return res.json({ auth: false, message: "No cookie in the headers" });
+  // try {
+  //   const cookie = req.cookies.JOBFIT_ANALYZER_AUTH_TOKEN;
+  //   if (!cookie)
+  //     return res.json({ auth: false, message: "No cookie in the headers" });
 
-    const match = jwt.verify(cookie, process.env.JWT_SECRET_KEY);
-    if (match) {
-      res.status(200).json({ auth: true, message: "Login" });
-    }
-  } catch (error) {
-    res.json({ auth: false, message: "Not Logged in user" });
-  }
+  //   const match = jwt.verify(cookie, process.env.JWT_SECRET_KEY);
+  //   if (match) {
+  //     res.status(200).json({ auth: true, message: "Login" });
+  //   }
+  // } catch (error) {
+  //   res.json({ auth: false, message: "Not Logged in user" });
+  // }
+  console.log(req.cookies);
+  res.json({ auth: false, message: "Not Logged in user" });
 };
 
 // @desc    Register new user and save the user details
