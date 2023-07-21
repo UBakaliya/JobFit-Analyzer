@@ -1,3 +1,4 @@
+import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -21,59 +22,52 @@ const Result = ({ onGoBack, matchRate }) => {
     }
   };
 
-  const ResumeMatchPage = () => {
-    let suggestions = null;
+  const suggestionsData = [
+    {
+      range: [0, 30],
+      title: "Suggestions to Improve Your Resume:",
+      suggestions: [
+        "Skill up in areas where your match rate is low.",
+        "Highlight relevant experiences and achievements.",
+        "Customize your resume to match the job requirements.",
+      ],
+    },
+    {
+      range: [30, 50],
+      title: "Suggestions to Enhance Your Resume:",
+      suggestions: [
+        "Focus on optimizing your skills and qualifications.",
+        "Showcase your achievements and results prominently.",
+        "Tailor your resume to highlight relevant keywords.",
+      ],
+    },
+    {
+      range: [50, 100],
+      title: "Suggestions to Maximize Your Resume Match:",
+      suggestions: [
+        "Continuously update your resume with new skills and experiences.",
+        "Highlight your most relevant qualifications and accomplishments.",
+        "Showcase your unique selling points and strengths.",
+      ],
+    },
+  ];
 
-    if (matchRate < 30) {
-      suggestions = (
-        <div>
-          <h3>Suggestions to Improve Your Resume:</h3>
-          <ul>
-            <li>Skill up in areas where your match rate is low.</li>
-            <li>Highlight relevant experiences and achievements.</li>
-            <li>Customize your resume to match the job requirements.</li>
-          </ul>
-        </div>
-      );
-    } else if (matchRate >= 30 && matchRate <= 50) {
-      suggestions = (
-        <div>
-          <h3>Suggestions to Enhance Your Resume:</h3>
-          <ul>
-            <li>Focus on optimizing your skills and qualifications.</li>
-            <li>Showcase your achievements and results prominently.</li>
-            <li>Tailor your resume to highlight relevant keywords.</li>
-          </ul>
-        </div>
-      );
-    } else if (matchRate > 50) {
-      suggestions = (
-        <div>
-          <h3>Suggestions to Maximize Your Resume Match:</h3>
-          <ul>
-            <li>
-              Continuously update your resume with new skills and experiences.
-            </li>
-            <li>
-              Highlight your most relevant qualifications and accomplishments.
-            </li>
-            <li>Showcase your unique selling points and strengths.</li>
-          </ul>
-        </div>
-      );
+  const getMatchingSuggestions = () => {
+    for (const { range, title, suggestions } of suggestionsData) {
+      if (matchRate >= range[0] && matchRate <= range[1]) {
+        return (
+          <div>
+            <h3>{title}</h3>
+            <ul>
+              {suggestions.map((suggestion, index) => (
+                <li key={index}>{suggestion}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
     }
-
-    return (
-      <div>
-        <h2
-          className={`text-center display-5 font-weight-bold ${getColorClass()}`}
-        >
-          {matchRate}%
-          <hr />
-        </h2>
-        {suggestions}
-      </div>
-    );
+    return null;
   };
 
   return (
@@ -81,15 +75,23 @@ const Result = ({ onGoBack, matchRate }) => {
       <Row className="justify-content-center">
         <Col xs={12} sm={7}>
           <div className="bg-light p-5 rounded shadow">
-            <h3 className=" mb-4 font-weight-bold">Result - Match Rate:</h3>
-            {ResumeMatchPage(matchRate)}
+            <h3 className="mb-4 font-weight-bold text-center">
+              Result - Match Rate:
+            </h3>
+            <h2
+              className={`text-center display-5 font-weight-bold ${getColorClass()}`}
+            >
+              {matchRate}%
+            </h2>
+            <hr />
+            {getMatchingSuggestions()}
           </div>
         </Col>
       </Row>
       <Row className="mt-4 justify-content-center">
         <Col xs="auto">
           <Button variant="dark" onClick={handleGoBack}>
-            <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+            <FontAwesomeIcon icon={faArrowLeft} className="btn-lg" />
             Go Back
           </Button>
         </Col>

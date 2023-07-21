@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button, ListGroup } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, ListGroup, Spinner } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import "../index.css";
 import axios from "axios";
@@ -10,7 +10,9 @@ const History = () => {
   }, []);
 
   const [histories, setHistories] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isClearing, setIsClearing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState({});
 
   const truncateQuery = (query, maxLength) => {
     if (query.length <= maxLength) {
@@ -23,10 +25,9 @@ const History = () => {
   useEffect(() => {
     const getResumes = async () => {
       try {
-        setIsLoading(true);
         const res = await axios.get("resumes");
-        setIsLoading(false);
         setHistories(res.data.resumes);
+        setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
         console.log(error);
@@ -37,33 +38,39 @@ const History = () => {
 
   const handleDelete = async (_id) => {
     try {
+      setIsDeleting((prevState) => ({
+        ...prevState,
+        [_id]: true,
+      }));
+
       const res = await axios.delete(`resumes/${_id}`);
       console.log(res.data);
-      setHistories(histories.filter((obj) => obj._id !== _id));
+      setHistories((prevHistories) => prevHistories.filter((obj) => obj._id !== _id));
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsDeleting((prevState) => ({
+        ...prevState,
+        [_id]: false,
+      }));
     }
   };
 
   const handleClearAll = async () => {
     try {
-      setIsLoading(true);
+      setIsClearing(true);
       const res = await axios.delete("resumes");
-      setIsLoading(false);
       console.log(res.data.message);
       setHistories([]);
     } catch (error) {
-      setIsLoading(false);
       console.log(error);
+    } finally {
+      setIsClearing(false);
     }
   };
 
   const getFormattedDate = (date) => {
     const formateDate = new Date(date);
-
-    // const month = formateDate.toLocaleString("en-US", { month: "long" });
-    // const day = formateDate.toLocaleString("en-US", { day: "numeric" });
-    // const year = formateDate.toLocaleString("en-US", { year: "numeric" });
     const time = formateDate.toLocaleString("en-US", { timeStyle: "medium" });
 
     return <span className="formatted-date">{time}</span>;
@@ -73,9 +80,9 @@ const History = () => {
     <>
       {isLoading ? (
         <div className="loading-overlay position-fixed top-0 start-0 h-100 w-100 d-flex align-items-center justify-content-center">
-          <div className="spinner-border text-primary" role="status">
+          <Spinner animation="border" variant="primary" role="status">
             <span className="visually-hidden">Loading...</span>
-          </div>
+          </Spinner>
         </div>
       ) : (
         <div className="history-container mt-5">
@@ -87,8 +94,20 @@ const History = () => {
                   variant="danger"
                   className="history-clear-button"
                   onClick={handleClearAll}
+                  disabled={isClearing}
                 >
-                  Clear All
+                  {isClearing ? (
+                    <>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                      Clearing...
+                    </>
+                  ) : (
+                    "Clear All"
+                  )}
                 </Button>
               )}
             </div>
@@ -101,21 +120,31 @@ const History = () => {
                     {histories.map(({ fileName, _id, createdAt }) => (
                       <ListGroup.Item
                         key={_id}
-                        className="d-flex justify-content-between align-items-center"
+                        className="d-flex justify-content-between align-items-center history-item"
                       >
                         <div className="item-container">
                           {getFormattedDate(createdAt)} -{" "}
-                          {/* <a href="" onClick={(e) => e.preventDefault()}> */}
-                            {truncateQuery(fileName, 50)}
-                          {/* </a> */}
+                          {truncateQuery(fileName, 50)}
                         </div>
                         <div>
                           <Button
                             variant="outline-danger"
                             className={"delete-button"}
                             onClick={() => handleDelete(_id)}
+                            disabled={isDeleting[_id]}
                           >
-                            <FaTimes />
+                            {isDeleting[_id] ? (
+                              <>
+                                <span
+                                  className="spinner-border spinner-border-sm me-2"
+                                  role="status"
+                                  aria-hidden="true"
+                                ></span>
+                                Deleting...
+                              </>
+                            ) : (
+                              <FaTimes />
+                            )}
                           </Button>
                         </div>
                       </ListGroup.Item>

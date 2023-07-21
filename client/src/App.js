@@ -17,8 +17,6 @@ const App = () => {
   axios.defaults.baseURL =
     "https://jobfit-analyzer-server.onrender.com/api/v1/";
 
-  // axios.defaults.baseURL = "http://localhost:9999/api/v1/";
-
   // alow sending cookies
   axios.defaults.withCredentials = true;
 

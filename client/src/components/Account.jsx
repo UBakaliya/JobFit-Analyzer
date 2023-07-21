@@ -18,18 +18,16 @@ const Account = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const getUserProfile = async () => {
     try {
-      setIsLoading(true);
       const response = await axios.get("profile/");
-      console.log(response);
       setUser({ name: response.data.username, email: response.data.email });
     } catch (error) {
       setError(error.response.data.message);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -46,26 +44,26 @@ const Account = () => {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (!newPassword || !oldPassword) {
-      return setError("*All fields are required");
+      return setError("All fields are required");
     }
 
     const trimNewPassword = newPassword.trim();
 
     if (!trimNewPassword || trimNewPassword.length < 5) {
-      return setError("*Password must be at least 5 characters long");
+      return setError("Password must be at least 5 characters long");
     }
 
     try {
-      setIsLoading(true);
+      setIsResettingPassword(true);
       const res = await axios.put(`profile/resetpassword/`, {
         oldPassword,
         newPassword,
       });
-      setIsLoading(false);
+      setIsResettingPassword(false);
       setSuccess(res.data.message);
       setError("");
     } catch (err) {
-      setIsLoading(false);
+      setIsResettingPassword(false);
       setError("*" + err.response.data.message);
       setSuccess("");
     }
@@ -77,17 +75,17 @@ const Account = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      setIsLoading(true);
+      setIsDeletingAccount(true);
       const res = await axios.delete("profile/delete/");
       setTimeout(() => {
-        setIsLoading(false);
+        setIsDeletingAccount(false);
         setSuccess(res.data.message);
         setError("");
         setShowConfirmation(false);
         window.location.href = "/";
       }, 3000);
     } catch (err) {
-      setIsLoading(false);
+      setIsDeletingAccount(false);
       setError("*" + err.response.data.message);
       setSuccess("");
       setShowConfirmation(false);
@@ -99,104 +97,125 @@ const Account = () => {
   };
 
   return (
-    <>
-      {isLoading ? (
-        <div className="loading-overlay position-fixed top-0 start-0 h-100 w-100 d-flex align-items-center justify-content-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      ) : (
-        <Container
-          className="d-flex justify-content-center align-items-center mt-5"
-          style={{ minHeight: "75vh" }}
-        >
-          <Card style={{ width: "900px" }}>
-            <Card.Body>
-              <h1>Profile</h1>
-              <Form>
-                <Form.Group controlId="formName">
-                  <Form.Label>Username</Form.Label>
-                  <Form.Control type="text" value={user.name} disabled />
-                </Form.Group>
+    <Container className="d-flex justify-content-center align-items-center mt-5">
+      <Card
+        className="w-100"
+        style={{
+          maxWidth: "600px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <Card.Body>
+          <h1 className="text-center mb-4">Profile</h1>
+          <Form>
+            <Form.Group controlId="formName">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" value={user.name} disabled />
+            </Form.Group>
 
-                <Form.Group controlId="formEmail">
-                  <Form.Label className="mt-2">Email</Form.Label>
-                  <Form.Control type="email" value={user.email} disabled />
-                </Form.Group>
+            <Form.Group controlId="formEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" value={user.email} disabled />
+            </Form.Group>
 
-                <Form.Group controlId="formOldPassword">
-                  <Form.Label className="mt-2">Old Password</Form.Label>
-                  <Form.Control
-                    autoComplete="on"
-                    type="password"
-                    value={oldPassword}
-                    placeholder="Old Password"
-                    required
-                    onChange={handleOldPasswordChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formNewPassword">
-                  <Form.Label className="mt-2">New Password</Form.Label>
-                  <Form.Control
-                    autoComplete="on"
-                    type="password"
-                    value={newPassword}
-                    placeholder="New Password"
-                    onChange={handleNewPasswordChange}
-                    required
-                  />
-                </Form.Group>
-                <p className="m-1  text-danger">{error}</p>
-                <p className="m-1  text-success">{success}</p>
+            <Form.Group controlId="formOldPassword">
+              <Form.Label>Old Password</Form.Label>
+              <Form.Control
+                autoComplete="on"
+                type="password"
+                value={oldPassword}
+                placeholder="Old Password"
+                required
+                onChange={handleOldPasswordChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formNewPassword">
+              <Form.Label>New Password</Form.Label>
+              <Form.Control
+                autoComplete="on"
+                type="password"
+                value={newPassword}
+                placeholder="New Password"
+                onChange={handleNewPasswordChange}
+                required
+              />
+            </Form.Group>
+            {error && <p className="text-danger mb-2">{error}</p>}
+            {success && <p className="text-success mb-2">{success}</p>}
 
-                <Button
-                  variant="primary"
-                  className="mt-3"
-                  onClick={handleResetPassword}
-                >
-                  Reset Password
-                </Button>
-                <hr />
-                <div className="d-flex justify-content-center">
+            <Button
+              variant="dark"
+              className="w-100 mt-3"
+              onClick={handleResetPassword}
+              disabled={isResettingPassword}
+            >
+              {isResettingPassword ? (
+                <>
+                  <div
+                    className="spinner-border spinner-border-sm text-light me-2"
+                    role="status"
+                  ></div>
+                  Resetting Password...
+                </>
+              ) : (
+                "Reset Password"
+              )}
+            </Button>
+            <hr className="my-4" />
+            <div className="d-flex justify-content-center align-items-center">
+              <Button
+                variant="danger"
+                className="mt-3"
+                onClick={handledDeleteAccount}
+                disabled={isDeletingAccount}
+              >
+                <FaTrash className="mr-2" /> Delete Account
+              </Button>
+
+              <Modal
+                show={showConfirmation}
+                onHide={handleCloseConfirmation}
+                centered
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>Confirmation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  Are you sure you want to delete your account?
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button
+                    variant="secondary"
+                    onClick={handleCloseConfirmation}
+                    disabled={isDeletingAccount}
+                  >
+                    Cancel
+                  </Button>
                   <Button
                     variant="danger"
-                    className="mt-3"
-                    onClick={handledDeleteAccount}
+                    onClick={handleConfirmDelete}
+                    disabled={isDeletingAccount}
                   >
-                    <FaTrash className="mr-2" /> Delete Account
+                    {isDeletingAccount ? (
+                      <>
+                        <div
+                          className="spinner-border spinner-border-sm text-light me-2"
+                          role="status"
+                        ></div>
+                        Deleting...
+                      </>
+                    ) : (
+                      "Delete"
+                    )}
                   </Button>
-
-                  <Modal
-                    show={showConfirmation}
-                    onHide={handleCloseConfirmation}
-                    centered
-                  >
-                    <Modal.Header closeButton>
-                      <Modal.Title>Confirmation</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      Are you sure you want to delete your account?
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button
-                        variant="secondary"
-                        onClick={handleCloseConfirmation}
-                      >
-                        Cancel
-                      </Button>
-                      <Button variant="danger" onClick={handleConfirmDelete}>
-                        Delete
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
-                </div>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Container>
-      )}
-    </>
+                </Modal.Footer>
+              </Modal>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 

@@ -45,8 +45,9 @@ const Register = () => {
       return setError("Password must be at least 5 characters long");
     }
 
-    if (password !== confirmPassword)
-      return setError("Ensure the passwords matches each other");
+    if (password !== confirmPassword) {
+      return setError("Ensure the passwords match each other");
+    }
 
     try {
       setIsLoading(true);
@@ -67,93 +68,114 @@ const Register = () => {
   };
 
   return (
-    <>
-      {isLoading ? (
-        <div className="loading-overlay position-fixed top-0 start-0 h-100 w-100 d-flex align-items-center justify-content-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
+    <div className="container d-flex align-items-center justify-content-center mt-5">
+      <div
+        className="card shadow"
+        style={{ maxWidth: "600px", width: "100%", borderRadius: "8px" }}
+      >
+        <div
+          className="card-header bg-dark text-white text-center py-3"
+          style={{ borderRadius: "8px 8px 0 0" }}
+        >
+          <h2 className="mb-0">Sign up</h2>
         </div>
-      ) : (
-        <div className="container mt-5">
-          <div className="row justify-content-center">
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-header">
-                  <h2 className="text-center">Sign up</h2>
-                </div>
-                <div className="card-body">
-                  <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                      <label htmlFor="username">Username</label>
-                      <input
-                        id="username"
-                        type="username"
-                        className="form-control"
-                        value={username}
-                        onChange={handleUsernameChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="email" className="mt-2">
-                        Email
-                      </label>
-                      <input
-                        id="email"
-                        type="email"
-                        className="form-control"
-                        value={email}
-                        onChange={handleEmailChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="mt-2" htmlFor="password">
-                        Password
-                      </label>
-                      <input
-                        id="password"
-                        type="password"
-                        className="form-control"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        required
-                        autoComplete="on"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="mt-2" htmlFor="confirm-password">
-                        Confirm Password
-                      </label>
-                      <input
-                        id="confirm-password"
-                        type="password"
-                        className="form-control"
-                        value={confirmPassword}
-                        onChange={handleConfirmPasswordChange}
-                        required
-                        autoComplete="on"
-                      />
-                    </div>
-                    <p className="text-danger text-center mt-3">{error}</p>
-                    <p className="text-success text-center mt-3">
-                      {confirmation}
-                    </p>
-
-                    <div className="text-center mt-3">
-                      <button type="submit" className="btn btn-dark w-100 p-2">
-                        Sign up
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="username" className="form-label">
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                className="form-control"
+                value={username}
+                onChange={handleUsernameChange}
+                required
+              />
             </div>
-          </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                className="form-control"
+                value={email}
+                onChange={handleEmailChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                className="form-control"
+                value={password}
+                onChange={handlePasswordChange}
+                required
+                autoComplete="on"
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="confirm-password" className="form-label">
+                Confirm Password
+              </label>
+              <input
+                id="confirm-password"
+                type="password"
+                className="form-control"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+                required
+                autoComplete="on"
+              />
+            </div>
+            {error && (
+              <p className="text-danger text-center mb-3">
+                <i className="bi bi-exclamation-circle me-1"></i>
+                {error}
+              </p>
+            )}
+            {confirmation && (
+              <p className="text-success text-center mb-3">
+                <i className="bi bi-check-circle me-1"></i>
+                {confirmation}
+              </p>
+            )}
+
+            <div className="text-center">
+              <button
+                type="submit"
+                className={`btn btn-dark ${isLoading ? "disabled" : ""}`}
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                  borderRadius: "4px",
+                  width: "100%",
+                }}
+              >
+                {isLoading ? (
+                  <>
+                    <div
+                      className="spinner-border spinner-border-sm text-light me-2"
+                      role="status"
+                    ></div>
+                    Signing up...
+                  </>
+                ) : (
+                  "Sign up"
+                )}
+              </button>
+            </div>
+          </form>
         </div>
-      )}
-    </>
+      </div>
+    </div>
   );
 };
 
