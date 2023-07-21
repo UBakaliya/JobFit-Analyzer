@@ -97,12 +97,7 @@ const register = async (req, res) => {
 // @access  Private
 const logout = (req, res) => {
   res
-    .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
-      maxAge: 1,
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-    })
+    .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
     .json({ message: "Logging out..." });
 };
 
@@ -131,12 +126,7 @@ const deleteProfile = async (req, res) => {
     const deleteUser = await User.deleteOne({ _id });
     if (deleteUser) {
       res
-        .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
-          maxAge: 1,
-          httpOnly: true,
-          secure: true,
-          sameSite: "lax",
-        })
+        .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
         .json({ message: "User is Deleted successfully" });
     } else {
       res.json({ message: "User deletion failed. Please try again later" });
