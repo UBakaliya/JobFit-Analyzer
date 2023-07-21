@@ -99,10 +99,18 @@ const logout = (req, res) => {
   console.log("BEFORE:", req.cookies);
 
   res
-    .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
+    .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
+      maxAge: null,
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    })
     .json({ message: "Logging out..." });
+  // res
+  //   .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
+  //   .json({ message: "Logging out..." });
 
-  console.log("AFTER:", req.cookies);
+  // console.log("AFTER:", req.cookies);
 };
 
 // @desc    Get user account details

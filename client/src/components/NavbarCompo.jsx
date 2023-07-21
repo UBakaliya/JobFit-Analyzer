@@ -14,7 +14,6 @@ const NavbarCompo = ({ isLogged, children }) => {
       const response = await axios.get("logout");
       setIsLoading(false);
       console.log(response.data.message);
-      // window.location.href = "/";
     } catch (error) {
       setIsLoading(false);
       console.log(error);
