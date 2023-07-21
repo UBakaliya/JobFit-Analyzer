@@ -83,11 +83,14 @@ const Home = () => {
       ) : showResult ? (
         <Result onGoBack={handleGoBack} matchRate={matchRate} />
       ) : (
-        <Row className="mt-5 m-0">
-          <Col xs={12} sm={6} className="offset-sm-3">
-            <Form className="card bg-light p-5 rounded" onSubmit={handleSubmit}>
+        <Row className="mt-5 m-0 d-flex align-items-center justify-content-center">
+          <Col xs={12} sm={10} md={8} lg={6}>
+            <Form
+              className="card bg-light p-5 rounded shadow"
+              onSubmit={handleSubmit}
+            >
               <Form.Group>
-                <Form.Label className="font-weight-bold mb-4 fs-4">
+                <Form.Label className="font-weight-bold mb-4 fs-4 text-center">
                   Upload Your Resume
                 </Form.Label>
 
@@ -107,7 +110,7 @@ const Home = () => {
                   Maximum file size: 10MB
                 </Form.Text>
                 <hr />
-                <Form.Label className="font-weight-bold mb-4 fs-4">
+                <Form.Label className="font-weight-bold mb-4 fs-4 text-center">
                   Job Description
                 </Form.Label>
                 <MDBTextArea
