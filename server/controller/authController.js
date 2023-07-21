@@ -98,7 +98,7 @@ const register = async (req, res) => {
 const logout = (req, res) => {
   console.log(req.cookies.JOBFIT_ANALYZER_AUTH_TOKEN);
   res
-    .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
+    .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "")
     .json({ message: "Logging out..." });
 };
 
