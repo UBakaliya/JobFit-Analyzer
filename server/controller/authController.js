@@ -33,7 +33,7 @@ const login = async (req, res) => {
           maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
           httpOnly: true,
           secure: true,
-          sameSite: "lax",
+          sameSite: "none",
         })
         .json({ message: "You are logged in successfully!", token: token });
     } else {
