@@ -13,16 +13,16 @@ const About = () => {
             <h1 className="mb-4">About</h1>
             <p className="text-justify">
               The Resume Matcher and Recommendation System is an innovative web
-              application designed to help job seekers enhance their resume and
-              evaluate its compatibility with specific job positions. By
-              comparing the user's resume with a job description, the system
-              calculates a match rate and provides personalized suggestions for
-              resume improvement.
+              application designed to assist job seekers in enhancing their
+              resume and evaluating its compatibility with specific job
+              positions. By comparing the user's resume with a job description,
+              the system calculates a match rate and provides personalized
+              suggestions for resume improvement.
             </p>
             <p className="text-justify">
-              Our goal is to assist job seekers in increasing their chances of
-              securing interviews by optimizing their resumes and ensuring they
-              align with the desired qualifications of employers.
+              Our goal is to increase job seekers' chances of securing
+              interviews by optimizing their resumes and ensuring they align
+              with the desired qualifications of employers.
             </p>
             <h2 className="mt-3">Features</h2>
             <ul>
@@ -41,7 +41,7 @@ const About = () => {
             </ul>
             <h2 className="mt-3">How It Works</h2>
             <ol>
-              <li>Sign up or log in to your account(Optional).</li>
+              <li>Sign up or log in to your account (Optional).</li>
               <li>Upload your resume and enter a job description.</li>
               <li>
                 Click on the "Start JobFit Analysis" button to see the match
@@ -56,8 +56,16 @@ const About = () => {
                 "History" tab.
                 <ul>
                   <li>
-                    Note: You must log into your account to view the History
-                    tab.
+                    Note: To access the History log, please try logging in with
+                    a supported browser such as Google Chrome or Mozilla
+                    Firefox.
+                  </li>
+                  <li>
+                    Safari users may experience issues due to its default cookie
+                    settings, which can prevent access to certain features of
+                    the application. For the best experience, we recommend using
+                    Google Chrome or Mozilla Firefox, as they offer better
+                    compatibility and performance.
                   </li>
                 </ul>
               </li>
