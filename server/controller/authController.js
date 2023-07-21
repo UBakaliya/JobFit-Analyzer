@@ -97,8 +97,14 @@ const register = async (req, res) => {
 // @access  Private
 const logout = (req, res) => {
   console.log("BEFORE:", req.cookies);
+
   res
-    .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
+    .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
+      maxAge: 5,
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    })
     .json({ message: "Logging out..." });
   console.log("AFTER:", req.cookies);
 };
