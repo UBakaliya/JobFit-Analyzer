@@ -99,13 +99,9 @@ const logout = (req, res) => {
   console.log("BEFORE:", req.cookies);
 
   res
-    .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
-      maxAge: 5,
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    })
+    .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
     .json({ message: "Logging out..." });
+
   console.log("AFTER:", req.cookies);
 };
 
