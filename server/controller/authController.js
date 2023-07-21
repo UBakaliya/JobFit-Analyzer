@@ -32,7 +32,7 @@ const login = async (req, res) => {
         .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
           maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
           httpOnly: true,
-          secure: true,
+          secure: true, // KEEP IT "TRUE" ONLY IN PRODUCTION
           sameSite: "none",
         })
         .json({ message: "You are logged in successfully!", token: token });
@@ -98,7 +98,12 @@ const register = async (req, res) => {
 const logout = (req, res) => {
   console.log(req.cookies.JOBFIT_ANALYZER_AUTH_TOKEN);
   res
-    .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "")
+    .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
+      maxAge: 1, // 12 hours max age
+      httpOnly: true,
+      secure: true, // KEEP IT "TRUE" ONLY IN PRODUCTION
+      sameSite: "none",
+    })
     .json({ message: "Logging out..." });
 };
 
@@ -127,7 +132,12 @@ const deleteProfile = async (req, res) => {
     const deleteUser = await User.deleteOne({ _id });
     if (deleteUser) {
       res
-        .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
+        .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
+          maxAge: 1, // 12 hours max age
+          httpOnly: true,
+          secure: true, // KEEP IT "TRUE" ONLY IN PRODUCTION
+          sameSite: "none",
+        })
         .json({ message: "User is Deleted successfully" });
     } else {
       res.json({ message: "User deletion failed. Please try again later" });
