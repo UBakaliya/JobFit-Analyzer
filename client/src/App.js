@@ -24,7 +24,6 @@ const App = () => {
     const checkIsLoggedIn = async () => {
       try {
         const res = await axios.get("loggedin");
-        console.log(res);
         setIsLoggedIn(res.data.auth);
       } catch (error) {
         setIsLoggedIn(false);
