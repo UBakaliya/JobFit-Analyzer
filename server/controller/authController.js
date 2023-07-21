@@ -96,10 +96,9 @@ const register = async (req, res) => {
 // @route   GET /api/v1/logout
 // @access  Private
 const logout = (req, res) => {
-  console.log(req.cookies.JOBFIT_ANALYZER_AUTH_TOKEN);
   res
     .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
-      maxAge: 1, // 12 hours max age
+      maxAge: 1,
       httpOnly: true,
       secure: true, // KEEP IT "TRUE" ONLY IN PRODUCTION
       sameSite: "none",
@@ -133,7 +132,7 @@ const deleteProfile = async (req, res) => {
     if (deleteUser) {
       res
         .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
-          maxAge: 1, // 12 hours max age
+          maxAge: 1,
           httpOnly: true,
           secure: true, // KEEP IT "TRUE" ONLY IN PRODUCTION
           sameSite: "none",
