@@ -105,9 +105,9 @@ const History = () => {
                       >
                         <div className="item-container">
                           {getFormattedDate(createdAt)} -{" "}
-                          <a href="" onClick={(e) => e.preventDefault()}>
+                          {/* <a href="" onClick={(e) => e.preventDefault()}> */}
                             {truncateQuery(fileName, 50)}
-                          </a>
+                          {/* </a> */}
                         </div>
                         <div>
                           <Button
