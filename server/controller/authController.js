@@ -98,9 +98,9 @@ const register = async (req, res) => {
 // @route   GET /api/v1/logout
 // @access  Private
 const logout = (req, res) => {
+  console.log(req.cookies);
   try {
     res
-      .status(200)
       .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
       .json({ message: "Logging out..." });
   } catch (error) {
