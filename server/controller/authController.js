@@ -33,7 +33,7 @@ const login = async (req, res) => {
           maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
           httpOnly: true,
           secure: true,
-          sameSite: "none",
+          sameSite: "strict",
         })
         .json({ message: "You are logged in successfully!", token: token });
     } else {
@@ -101,7 +101,7 @@ const logout = (req, res) => {
       maxAge: 1,
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "strict",
     })
     .json({ message: "Logging out..." });
 };
@@ -135,7 +135,7 @@ const deleteProfile = async (req, res) => {
           maxAge: 1,
           httpOnly: true,
           secure: true,
-          sameSite: "none",
+          sameSite: "strict",
         })
         .json({ message: "User is Deleted successfully" });
     } else {
