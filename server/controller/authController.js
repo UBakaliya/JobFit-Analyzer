@@ -34,7 +34,6 @@ const login = async (req, res) => {
           httpOnly: true,
           secure: true, // KEEP IT "TRUE" ONLY IN PRODUCTION
           sameSite: "none",
-          domain: ".netlify.app",
         })
         .json({ message: "You are logged in successfully!", token: token });
     } else {
@@ -103,7 +102,6 @@ const logout = (req, res) => {
       httpOnly: true,
       secure: true, // KEEP IT "TRUE" ONLY IN PRODUCTION
       sameSite: "none",
-      domain: ".netlify.app",
     })
     .json({ message: "Logging out..." });
 };
@@ -138,7 +136,6 @@ const deleteProfile = async (req, res) => {
           httpOnly: true,
           secure: true, // KEEP IT "TRUE" ONLY IN PRODUCTION
           sameSite: "none",
-          domain: ".netlify.app",
         })
         .json({ message: "User is Deleted successfully" });
     } else {
