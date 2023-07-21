@@ -10,18 +10,15 @@ require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://jobfit-analyzer.netlify.app"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload());
-
-const corsOptions = {
-  credentials: true,
-  origin: "http://localhost:3000",
-  // origin: "https://jobfit-analyzer.netlify.app",
-};
-
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

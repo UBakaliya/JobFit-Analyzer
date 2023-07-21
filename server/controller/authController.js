@@ -31,6 +31,7 @@ const login = async (req, res) => {
       res
         .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", token, {
           maxAge: 12 * 60 * 60 * 1000, // 12 hours max age
+          sameSite: "none",
           httpOnly: true,
         })
         .json({ message: "You are logged in successfully!", token: token });
@@ -156,7 +157,7 @@ const resetPassword = async (req, res) => {
     const { newPassword, oldPassword } = req.body;
 
     const comparePass = await bcrypt.compare(oldPassword, user.password);
-    
+
     if (comparePass) {
       const updatePass = await User.updateOne(
         { _id },
