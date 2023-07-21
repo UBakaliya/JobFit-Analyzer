@@ -12,8 +12,11 @@ const NavbarCompo = ({ isLogged, children }) => {
     try {
       setIsLoading(true);
       const response = await axios.get("logout");
-      setIsLoading(false);
-      console.log(response.data.message);
+      setTimeout(() => {
+        window.location.reload();
+        console.log(response.data.message);
+        setIsLoading(false);
+      }, 3000);
     } catch (error) {
       setIsLoading(false);
       console.log(error);

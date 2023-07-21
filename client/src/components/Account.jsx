@@ -79,11 +79,13 @@ const Account = () => {
     try {
       setIsLoading(true);
       const res = await axios.delete("profile/delete/");
-      setIsLoading(false);
-      setSuccess(res.data.message);
-      setError("");
-      setShowConfirmation(false);
-      window.location.href = "/";
+      setTimeout(() => {
+        setIsLoading(false);
+        setSuccess(res.data.message);
+        setError("");
+        setShowConfirmation(false);
+        window.location.href = "/";
+      }, 3000);
     } catch (err) {
       setIsLoading(false);
       setError("*" + err.response.data.message);

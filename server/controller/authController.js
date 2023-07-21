@@ -96,8 +96,6 @@ const register = async (req, res) => {
 // @route   GET /api/v1/logout
 // @access  Private
 const logout = (req, res) => {
-  console.log("BEFORE:", req.cookies);
-
   res
     .cookie("JOBFIT_ANALYZER_AUTH_TOKEN", "", {
       maxAge: 1,
@@ -106,11 +104,6 @@ const logout = (req, res) => {
       sameSite: "none",
     })
     .json({ message: "Logging out..." });
-  // res
-  //   .clearCookie("JOBFIT_ANALYZER_AUTH_TOKEN")
-  //   .json({ message: "Logging out..." });
-
-  // console.log("AFTER:", req.cookies);
 };
 
 // @desc    Get user account details
