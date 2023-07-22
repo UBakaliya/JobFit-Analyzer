@@ -15,7 +15,7 @@ JobFit-Analyzer is a web application that helps job seekers analyze their resume
 
 ![JobFit-Analyzer Demo](images/JobFit-Analyzer-Home.png)
 
-You can find a live demo of the application [here](link_to_live_demo) (NOT AVAILABLE YET)
+You can find a live demo of the application [here](https://jobfitanalyzer.netlify.app/)
 
 ## Getting Started
 
@@ -92,4 +92,3 @@ This project is licensed under the [MIT License](LICENSE).
 - [Express.js](https://expressjs.com/) - Backend web application framework for Node.js.
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) - Library used for generating and verifying JWTs for user authentication.
 - [MongoDB](https://www.mongodb.com/) - NoSQL database used to store user information and resume analysis data.
-
