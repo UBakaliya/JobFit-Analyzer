@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Toast } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   useEffect(() => {
@@ -16,7 +17,9 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-
+  
+  const navigate = useNavigate();
+  
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -66,7 +69,7 @@ const Register = () => {
       setError("");
       setConfirmation(response.data.message);
       setShowSuccessToast(true);
-      window.location.href = "/login";
+      navigate("/login")
     } catch (error) {
       setIsLoading(false);
       setConfirmation("");

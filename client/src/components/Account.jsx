@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Card, Container, Form, Button, Modal, Toast } from "react-bootstrap";
+import {
+  Card,
+  Container,
+  Form,
+  Button,
+  Modal,
+  Toast,
+  Spinner,
+} from "react-bootstrap";
 import axios from "axios";
 import { FaTrash } from "react-icons/fa";
 
@@ -20,6 +28,7 @@ const Account = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isResettingPassword, setIsResettingPassword] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
@@ -28,6 +37,7 @@ const Account = () => {
     try {
       const response = await axios.get("profile/");
       setUser({ name: response.data.username, email: response.data.email });
+      setIsLoading(false);
     } catch (error) {
       setError(error.response.data.message);
     }
@@ -124,150 +134,160 @@ const Account = () => {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center mt-5">
-      <Card
-        className="w-100"
-        style={{
-          maxWidth: "600px",
-          borderRadius: "8px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <Card.Body>
-          <h1 className="text-center mb-4">Profile</h1>
-          <Form>
-            <Form.Group controlId="formName">
-              <Form.Label>Username</Form.Label>
-              <Form.Control type="text" value={user.name} disabled />
-            </Form.Group>
+    <>
+      {isLoading ? (
+        <div className="loading-overlay position-fixed top-0 start-0 h-100 w-100 d-flex align-items-center justify-content-center">
+          <Spinner animation="border" variant="primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      ) : (
+        <Container className="d-flex justify-content-center align-items-center mt-5">
+          <Card
+            className="w-100"
+            style={{
+              maxWidth: "600px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <Card.Body>
+              <h1 className="text-center mb-4">Profile</h1>
+              <Form>
+                <Form.Group controlId="formName">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control type="text" value={user.name} disabled />
+                </Form.Group>
 
-            <Form.Group controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" value={user.email} disabled />
-            </Form.Group>
+                <Form.Group controlId="formEmail">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control type="email" value={user.email} disabled />
+                </Form.Group>
 
-            <Form.Group controlId="formOldPassword">
-              <Form.Label>Old Password</Form.Label>
-              <Form.Control
-                autoComplete="on"
-                type="password"
-                value={oldPassword}
-                placeholder="Old Password"
-                required
-                onChange={handleOldPasswordChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formNewPassword">
-              <Form.Label>New Password</Form.Label>
-              <Form.Control
-                autoComplete="on"
-                type="password"
-                value={newPassword}
-                placeholder="New Password"
-                onChange={handleNewPasswordChange}
-                required
-              />
-            </Form.Group>
-            <Button
-              variant="dark"
-              className="w-100 mt-3"
-              onClick={handleResetPassword}
-              disabled={isResettingPassword}
-            >
-              {isResettingPassword ? (
-                <>
-                  <div
-                    className="spinner-border spinner-border-sm text-light me-2"
-                    role="status"
-                  ></div>
-                  Resetting Password...
-                </>
-              ) : (
-                "Reset Password"
-              )}
-            </Button>
-            <hr className="my-4" />
-            <div className="d-flex justify-content-center align-items-center">
-              <Button
-                variant="danger"
-                className="mt-3"
-                onClick={handleDeleteAccount}
-                disabled={isDeletingAccount}
-              >
-                <FaTrash className="mr-2" /> Delete Account
-              </Button>
-
-              <Modal
-                show={showConfirmation}
-                onHide={handleCloseConfirmation}
-                centered
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title>Confirmation</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  Are you sure you want to delete your account?
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button
-                    variant="secondary"
-                    onClick={handleCloseConfirmation}
-                    disabled={isDeletingAccount}
-                  >
-                    Cancel
-                  </Button>
+                <Form.Group controlId="formOldPassword">
+                  <Form.Label>Old Password</Form.Label>
+                  <Form.Control
+                    autoComplete="on"
+                    type="password"
+                    value={oldPassword}
+                    placeholder="Old Password"
+                    required
+                    onChange={handleOldPasswordChange}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formNewPassword">
+                  <Form.Label>New Password</Form.Label>
+                  <Form.Control
+                    autoComplete="on"
+                    type="password"
+                    value={newPassword}
+                    placeholder="New Password"
+                    onChange={handleNewPasswordChange}
+                    required
+                  />
+                </Form.Group>
+                <Button
+                  variant="dark"
+                  className="w-100 mt-3"
+                  onClick={handleResetPassword}
+                  disabled={isResettingPassword}
+                >
+                  {isResettingPassword ? (
+                    <>
+                      <div
+                        className="spinner-border spinner-border-sm text-light me-2"
+                        role="status"
+                      ></div>
+                      Resetting Password...
+                    </>
+                  ) : (
+                    "Reset Password"
+                  )}
+                </Button>
+                <hr className="my-4" />
+                <div className="d-flex justify-content-center align-items-center">
                   <Button
                     variant="danger"
-                    onClick={handleConfirmDelete}
+                    className="mt-3"
+                    onClick={handleDeleteAccount}
                     disabled={isDeletingAccount}
                   >
-                    {isDeletingAccount ? (
-                      <>
-                        <div
-                          className="spinner-border spinner-border-sm text-light me-2"
-                          role="status"
-                        ></div>
-                        Deleting...
-                      </>
-                    ) : (
-                      "Delete"
-                    )}
+                    <FaTrash className="mr-2" /> Delete Account
                   </Button>
-                </Modal.Footer>
-              </Modal>
-            </div>
-          </Form>
-        </Card.Body>
-      </Card>
 
-      <Toast
-        show={showErrorToast}
-        onClose={handleCloseErrorToast}
-        autohide
-        delay={3000} // Set the duration here (in milliseconds)
-        className="position-fixed top-0 end-0 p-3"
-        style={{ zIndex: 9999 }}
-      >
-        <Toast.Header className="bg-danger text-white">
-          <strong className="me-auto">Error</strong>
-        </Toast.Header>
-        <Toast.Body>{error}</Toast.Body>
-      </Toast>
+                  <Modal
+                    show={showConfirmation}
+                    onHide={handleCloseConfirmation}
+                    centered
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>Confirmation</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      Are you sure you want to delete your account?
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button
+                        variant="secondary"
+                        onClick={handleCloseConfirmation}
+                        disabled={isDeletingAccount}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={handleConfirmDelete}
+                        disabled={isDeletingAccount}
+                      >
+                        {isDeletingAccount ? (
+                          <>
+                            <div
+                              className="spinner-border spinner-border-sm text-light me-2"
+                              role="status"
+                            ></div>
+                            Deleting...
+                          </>
+                        ) : (
+                          "Delete"
+                        )}
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
 
-      <Toast
-        show={showSuccessToast}
-        onClose={handleCloseSuccessToast}
-        autohide
-        delay={3000} // Set the duration here (in milliseconds)
-        className="position-fixed top-0 end-0 p-3"
-        style={{ zIndex: 9999 }}
-      >
-        <Toast.Header className="bg-success text-white">
-          <strong className="me-auto">Success</strong>
-        </Toast.Header>
-        <Toast.Body>{success}</Toast.Body>
-      </Toast>
-    </Container>
+          <Toast
+            show={showErrorToast}
+            onClose={handleCloseErrorToast}
+            autohide
+            delay={3000} // Set the duration here (in milliseconds)
+            className="position-fixed top-0 end-0 p-3"
+            style={{ zIndex: 9999 }}
+          >
+            <Toast.Header className="bg-danger text-white">
+              <strong className="me-auto">Error</strong>
+            </Toast.Header>
+            <Toast.Body>{error}</Toast.Body>
+          </Toast>
+
+          <Toast
+            show={showSuccessToast}
+            onClose={handleCloseSuccessToast}
+            autohide
+            delay={3000} // Set the duration here (in milliseconds)
+            className="position-fixed top-0 end-0 p-3"
+            style={{ zIndex: 9999 }}
+          >
+            <Toast.Header className="bg-success text-white">
+              <strong className="me-auto">Success</strong>
+            </Toast.Header>
+            <Toast.Body>{success}</Toast.Body>
+          </Toast>
+        </Container>
+      )}
+    </>
   );
 };
 

@@ -29,7 +29,6 @@ const History = () => {
         setHistories(res.data.resumes);
         setIsLoading(false);
       } catch (error) {
-        setIsLoading(false);
         console.log(error);
       }
     };
@@ -45,7 +44,9 @@ const History = () => {
 
       const res = await axios.delete(`resumes/${_id}`);
       console.log(res.data);
-      setHistories((prevHistories) => prevHistories.filter((obj) => obj._id !== _id));
+      setHistories((prevHistories) =>
+        prevHistories.filter((obj) => obj._id !== _id)
+      );
     } catch (error) {
       console.log(error);
     } finally {
