@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Toast } from "react-bootstrap";
 
 const Register = () => {
   useEffect(() => {
@@ -13,6 +14,8 @@ const Register = () => {
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -38,14 +41,17 @@ const Register = () => {
     const trimPassword = password.trim();
 
     if (!trimUsername || trimUsername.length < 4) {
+      setShowErrorToast(true);
       return setError("Username must be at least 5 characters long");
     }
 
     if (!trimPassword || trimPassword.length < 5) {
+      setShowErrorToast(true);
       return setError("Password must be at least 5 characters long");
     }
 
     if (password !== confirmPassword) {
+      setShowErrorToast(true);
       return setError("Ensure the passwords match each other");
     }
 
@@ -59,12 +65,24 @@ const Register = () => {
       setIsLoading(false);
       setError("");
       setConfirmation(response.data.message);
+      setShowSuccessToast(true);
       window.location.href = "/login";
     } catch (error) {
       setIsLoading(false);
       setConfirmation("");
+      setShowErrorToast(true);
       setError(error.response.data.message);
     }
+  };
+
+  const handleCloseErrorToast = () => {
+    setError("");
+    setShowErrorToast(false);
+  };
+
+  const handleCloseSuccessToast = () => {
+    setConfirmation("");
+    setShowSuccessToast(false);
   };
 
   return (
@@ -135,18 +153,6 @@ const Register = () => {
                 autoComplete="on"
               />
             </div>
-            {error && (
-              <p className="text-danger text-center mb-3">
-                <i className="bi bi-exclamation-circle me-1"></i>
-                {error}
-              </p>
-            )}
-            {confirmation && (
-              <p className="text-success text-center mb-3">
-                <i className="bi bi-check-circle me-1"></i>
-                {confirmation}
-              </p>
-            )}
 
             <div className="text-center">
               <button
@@ -175,6 +181,34 @@ const Register = () => {
           </form>
         </div>
       </div>
+
+      <Toast
+        show={showErrorToast}
+        onClose={handleCloseErrorToast}
+        autohide
+        delay={3000} // Set the duration here (in milliseconds)
+        className="position-fixed top-0 end-0 p-3"
+        style={{ zIndex: 9999 }}
+      >
+        <Toast.Header className="bg-danger text-white">
+          <strong className="me-auto">Error</strong>
+        </Toast.Header>
+        <Toast.Body>{error}</Toast.Body>
+      </Toast>
+
+      <Toast
+        show={showSuccessToast}
+        onClose={handleCloseSuccessToast}
+        autohide
+        delay={3000} // Set the duration here (in milliseconds)
+        className="position-fixed top-0 end-0 p-3"
+        style={{ zIndex: 9999 }}
+      >
+        <Toast.Header className="bg-success text-white">
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>{confirmation}</Toast.Body>
+      </Toast>
     </div>
   );
 };

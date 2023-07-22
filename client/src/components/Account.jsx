@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Container, Form, Button, Modal } from "react-bootstrap";
+import { Card, Container, Form, Button, Modal, Toast } from "react-bootstrap";
 import axios from "axios";
 import { FaTrash } from "react-icons/fa";
 
@@ -20,6 +20,9 @@ const Account = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isResettingPassword, setIsResettingPassword] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   const getUserProfile = async () => {
     try {
@@ -44,32 +47,43 @@ const Account = () => {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (!newPassword || !oldPassword) {
-      return setError("All fields are required");
+      setSuccess("");
+      setError("All fields are required");
+      setShowErrorToast(true);
+      return;
     }
 
-    const trimNewPassword = newPassword.trim();
-
-    if (!trimNewPassword || trimNewPassword.length < 5) {
-      return setError("Password must be at least 5 characters long");
+    // Other form validation checks here...
+    const trimmedNewPassword = newPassword.trim();
+    if (trimmedNewPassword.length < 5) {
+      setSuccess("");
+      setError("Password must be at least 5 characters long");
+      setShowErrorToast(true);
+      return;
     }
 
     try {
       setIsResettingPassword(true);
       const res = await axios.put(`profile/resetpassword/`, {
         oldPassword,
-        newPassword,
+        newPassword: trimmedNewPassword,
       });
       setIsResettingPassword(false);
-      setSuccess(res.data.message);
+      setSuccess("Password reset successful");
       setError("");
+      setNewPassword("");
+      setOldPassword("");
+      setShowSuccessToast(true);
+      console.log(res.data.message);
     } catch (err) {
       setIsResettingPassword(false);
-      setError("*" + err.response.data.message);
       setSuccess("");
+      setError("*" + err.response.data.message);
+      setShowErrorToast(true);
     }
   };
 
-  const handledDeleteAccount = () => {
+  const handleDeleteAccount = () => {
     setShowConfirmation(true);
   };
 
@@ -79,17 +93,30 @@ const Account = () => {
       const res = await axios.delete("profile/delete/");
       setTimeout(() => {
         setIsDeletingAccount(false);
-        setSuccess(res.data.message);
+        setSuccess("Account deleted successfully");
         setError("");
         setShowConfirmation(false);
+        setShowSuccessToast(true);
+        console.log(res.data.message);
         window.location.href = "/";
       }, 3000);
     } catch (err) {
       setIsDeletingAccount(false);
       setError("*" + err.response.data.message);
+      setShowErrorToast(true);
       setSuccess("");
       setShowConfirmation(false);
     }
+  };
+
+  const handleCloseErrorToast = () => {
+    setError("");
+    setShowErrorToast(false);
+  };
+
+  const handleCloseSuccessToast = () => {
+    setSuccess("");
+    setShowSuccessToast(false);
   };
 
   const handleCloseConfirmation = () => {
@@ -141,9 +168,6 @@ const Account = () => {
                 required
               />
             </Form.Group>
-            {error && <p className="text-danger mb-2">{error}</p>}
-            {success && <p className="text-success mb-2">{success}</p>}
-
             <Button
               variant="dark"
               className="w-100 mt-3"
@@ -167,7 +191,7 @@ const Account = () => {
               <Button
                 variant="danger"
                 className="mt-3"
-                onClick={handledDeleteAccount}
+                onClick={handleDeleteAccount}
                 disabled={isDeletingAccount}
               >
                 <FaTrash className="mr-2" /> Delete Account
@@ -215,6 +239,34 @@ const Account = () => {
           </Form>
         </Card.Body>
       </Card>
+
+      <Toast
+        show={showErrorToast}
+        onClose={handleCloseErrorToast}
+        autohide
+        delay={3000} // Set the duration here (in milliseconds)
+        className="position-fixed top-0 end-0 p-3"
+        style={{ zIndex: 9999 }}
+      >
+        <Toast.Header className="bg-danger text-white">
+          <strong className="me-auto">Error</strong>
+        </Toast.Header>
+        <Toast.Body>{error}</Toast.Body>
+      </Toast>
+
+      <Toast
+        show={showSuccessToast}
+        onClose={handleCloseSuccessToast}
+        autohide
+        delay={3000} // Set the duration here (in milliseconds)
+        className="position-fixed top-0 end-0 p-3"
+        style={{ zIndex: 9999 }}
+      >
+        <Toast.Header className="bg-success text-white">
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>{success}</Toast.Body>
+      </Toast>
     </Container>
   );
 };

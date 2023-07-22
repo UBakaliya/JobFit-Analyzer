@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Toast } from "react-bootstrap";
 
 const Login = () => {
   useEffect(() => {
@@ -11,6 +12,8 @@ const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -28,12 +31,24 @@ const Login = () => {
       setIsLoading(false);
       setSuccess(response.data.message);
       setError("");
+      setShowSuccessToast(true);
       window.location.href = "/";
     } catch (error) {
       setIsLoading(false);
       setSuccess("");
       setError(error.response.data.message);
+      setShowErrorToast(true);
     }
+  };
+
+  const handleCloseErrorToast = () => {
+    setError("");
+    setShowErrorToast(false);
+  };
+
+  const handleCloseSuccessToast = () => {
+    setSuccess("");
+    setShowSuccessToast(false);
   };
 
   return (
@@ -77,19 +92,6 @@ const Login = () => {
                 required
               />
             </div>
-            {error && (
-              <p className="text-danger text-center mb-3">
-                <i className="bi bi-exclamation-circle me-1"></i>
-                {error}
-              </p>
-            )}
-            {success && (
-              <p className="text-success text-center mb-3">
-                <i className="bi bi-check-circle me-1"></i>
-                {success}
-              </p>
-            )}
-
             <div className="text-center">
               <button
                 type="submit"
@@ -117,6 +119,34 @@ const Login = () => {
           </form>
         </div>
       </div>
+
+      <Toast
+        show={showErrorToast}
+        onClose={handleCloseErrorToast}
+        autohide
+        delay={3000} // Set the duration here (in milliseconds)
+        className="position-fixed top-0 end-0 p-3"
+        style={{ zIndex: 9999 }}
+      >
+        <Toast.Header className="bg-danger text-white">
+          <strong className="me-auto">Error</strong>
+        </Toast.Header>
+        <Toast.Body>{error}</Toast.Body>
+      </Toast>
+
+      <Toast
+        show={showSuccessToast}
+        onClose={handleCloseSuccessToast}
+        autohide
+        delay={3000} // Set the duration here (in milliseconds)
+        className="position-fixed top-0 end-0 p-3"
+        style={{ zIndex: 9999 }}
+      >
+        <Toast.Header className="bg-success text-white">
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>{success}</Toast.Body>
+      </Toast>
     </div>
   );
 };
