@@ -5,11 +5,11 @@ const connectWithDB = require("./config/mongodbConfig");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
-
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
 app.use(
   cors({
     origin: ["http://localhost:3000", "https://jobfitanalyzer.netlify.app"],

@@ -11,7 +11,7 @@ import ProtectedRoutes from "./utils/ProtectedRoutes";
 import History from "./components/History";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // base url to make request to the server
   axios.defaults.baseURL =
@@ -26,7 +26,6 @@ const App = () => {
         const res = await axios.get("loggedin");
         setIsLoggedIn(res.data.auth);
       } catch (error) {
-        setIsLoggedIn(false);
         console.log(error);
       }
     };

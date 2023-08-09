@@ -16,11 +16,13 @@ const login = async (req, res) => {
       (await User.findOne({ username: email })) ||
       (await User.findOne({ email }));
 
+    // check if the user exists
     if (!user) {
       return res
         .status(401)
         .json({ message: "username/email or password is invalid" });
     }
+
     const comparePass = await bcrypt.compare(password, user.password);
     // validate the password
     if (comparePass) {
@@ -35,7 +37,7 @@ const login = async (req, res) => {
           secure: true, // KEEP IT "TRUE" ONLY IN PRODUCTION
           sameSite: "none",
         })
-        .json({ message: "You are logged in successfully!", token: token });
+        .json({ message: "You are logged in successfully!" });
     } else {
       return res
         .status(401)
@@ -69,18 +71,19 @@ const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // create new user in db
+    // create new user
     const newUser = await new User({
       username,
       email,
       password: await bcrypt.hash(password, 10),
+      verified: false,
+      resumes: [],
     });
 
+    // add the user to db
     (await newUser.save())
-      ? res
-          .status(200)
-          .json({ message: "Success! Your signup process is complete!" })
-      : res.statusCode(500).json({ message: "can't add user to db" });
+      ? res.json({ message: "Success! Your signup process is complete!" })
+      : res.statusCode(401).json({ message: "can't add user to db" });
   } catch (error) {
     // user already exists
     error.code === 11000
@@ -90,6 +93,15 @@ const register = async (req, res) => {
         })
       : res.json({ message: error.message });
   }
+};
+
+// @desc    User clicks the sent email with the url, then verified the user
+// @route   GET /api/v1/conformation/{token}
+// @access  Public
+const verifyUser = (req, res) => {
+  //*******
+  // TODO
+  //*******
 };
 
 // @desc    Auth logout user and clear the cookie from the browser
